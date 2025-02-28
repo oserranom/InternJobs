@@ -42,4 +42,3 @@ CREATE TABLE applications (
     FOREIGN KEY (job_offer_id) REFERENCES job_offers(id) ON DELETE CASCADE
 );
 
-
