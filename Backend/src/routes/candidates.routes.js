@@ -1,7 +1,9 @@
 import { Router } from "express";
-import { createCandidate, getCandidate, updateCandidate, deleteCandidate } from "../controllers/candidates.controllers.js";
+import { createCandidate, getCandidate, updateCandidate, deleteCandidate, loginCandidate } from "../controllers/candidates.controllers.js";
 
 const candidatesRouter = Router();
+
+candidatesRouter.post('/login', loginCandidate); 
 
 candidatesRouter.post('/', createCandidate);
 
