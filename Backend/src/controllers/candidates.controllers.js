@@ -85,7 +85,7 @@ export const createCandidate = async (req, res) =>{
         return res.json(rows[0]); 
         
     } catch (error) {
-        if(error?.code === 23505) return res.status(409).json({message: 'Este email ya está registrado'});
+        if(error?.code === '23505') return res.status(409).json({message: 'Este email ya está registrado'});
         return res.status(500).json({message: 'Internal server error'}); 
     }
 }
