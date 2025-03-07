@@ -6,8 +6,8 @@ export const loginCandidate = async (req, res) =>{
 
         const { email, password } = req.body;
 
-        //Validación de email y password no sean null
-        if(!email || !password) return res.status(400).json({ error: 'Email y contraseña son requeridos'});
+        //Validación de email y password no sean null o espacios vacíos 
+        if(!email?.trim() || !password?.trim()) return res.status(400).json({ error: 'Email y contraseña son requeridos'});
 
         //Buscar coincidencia candidato por email
         const { rows } = await pool.query("SELECT * FROM candidates WHERE email = $1", [email]); 
@@ -59,12 +59,12 @@ export const createCandidate = async (req, res) =>{
     try {
         const { name, email, password, cv, phone_number } = req.body;
 
-        //Validación de campos nulos
-        if (!name || !email || !password || !phone_number) {
+        //Validación de campos nulos o espacios vacíos 
+        if (!name?.trim() || !email || !password || !phone_number) {
             return res.status(400).json({ message: 'Nombre, email, contraseña y tlf son requeridos' });
         }
 
-        //Validación de email válido
+        //Validación de email válido "algo"@"algo"."algo"
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json({ message: 'El email no tiene un formato válido' });
@@ -79,21 +79,42 @@ export const createCandidate = async (req, res) =>{
             return res.status(400).json({ message: 'El número de teléfono debe contener al menos 9 dígitos' });
         }
 
+        //Ha pasado las validaciones: consulta INSERT
         const {rows} = await pool.query(
                         "INSERT INTO candidates (name, email, password, cv, phone_number) VALUES ($1, $2, $3, $4, $5) RETURNING*",
                         [name, email, password, cv || null, phone_number]);
         return res.json(rows[0]); 
         
     } catch (error) {
+        //Separamos el error 23505 de postgres para devolver email ya registrado en la BBDD
         if(error?.code === '23505') return res.status(409).json({message: 'Este email ya está registrado'});
         return res.status(500).json({message: 'Internal server error'}); 
     }
 }
 
 export const updateCandidate = async (req, res) =>{
-   // res.json({message: 'Esto es una prueba'});
+   const { id } = req.params;
+   const { name, email, phone_number, cv } = req.body;
+
+   const { rows } = await pool.query("SELECT * FROM candidates"); //Continuar aquí
 }
 
 export const deleteCandidate = async (req, res) =>{
-    //res.json({message: 'Esto es una prueba'});
+    const { id } = req.params;
+
+    try {
+
+        //Consulta candidato por id, usamos rowCount porque con DELETE row.length siempre devuelve 0
+        const { rowCount } = await pool.query('DELETE FROM candidates WHERE id = $1', [id]);
+
+        if(rowCount === 0) return res.status(404).json({ message: 'EL candidato no existe'});
+
+        return res.status(200).json({ message: 'Candidato eliminado'}); 
+
+    } catch (error) {
+
+        console.log(error);
+        return res.status(500).json({ message: 'Internal server error'}); 
+    }
+
 }
