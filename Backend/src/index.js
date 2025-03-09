@@ -10,9 +10,9 @@ const app = express();
 app.use(express.json());
 
 
-app.use('/candidates', candidatesRouter); 
-app.use('/jobs', jobOffersRouter); 
-app.use('/companies', companiesRouter); 
+app.use('/api/candidates', candidatesRouter); 
+app.use('/api/jobs', jobOffersRouter); 
+app.use('/api/companies', companiesRouter); 
 
 
 app.listen(PORT);
