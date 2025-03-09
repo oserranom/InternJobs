@@ -9,3 +9,4 @@ export const getJobOffers = async (req, res) =>{
     }
 
 }
+
