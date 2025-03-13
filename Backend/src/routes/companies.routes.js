@@ -1,9 +1,11 @@
 import { Router } from "express";
-import { createCompanie, getCompanie, updateCompanie, deleteCompanie, createJobOffer } from "../controllers/companies.controllers.js";
+import { createCompanie, getCompanie, updateCompanie, deleteCompanie, createJobOffer, loginCompanie } from "../controllers/companies.controllers.js";
 
 const companiesRouter = Router(); 
 
 companiesRouter.post('/', createCompanie);
+
+companiesRouter.post('/login', loginCompanie); 
 
 companiesRouter.get('/:id', getCompanie);
 

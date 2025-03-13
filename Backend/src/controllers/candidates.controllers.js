@@ -13,7 +13,7 @@ export const loginCandidate = async (req, res) =>{
         const { rows } = await pool.query("SELECT * FROM candidates WHERE email = $1", [email]); 
 
         //res 404 en caso de no encontrar candidate
-        if(rows.length === 0) return res.status(404).json({ error: `El usuario con email: ${email} no existe`}); 
+        if(rows.length === 0) return res.status(404).json({ error: `El candidato con email: ${email} no existe`}); 
 
         //Comprobar contraseña, sin HASH por ahora
         const candidate = rows[0]; 
@@ -21,7 +21,7 @@ export const loginCandidate = async (req, res) =>{
 
         //Pasa validación y password coincide
         res.status(200).json({
-            message: 'Login succes',
+            message: 'Login correcto',
             candidate:{
                 id: candidate.id,
                 name: candidate.name,
