@@ -49,7 +49,7 @@ export const getCandidate = async (req, res) =>{
 
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: `El patrón de la id: ${id} no cumple con el estándar de sintáxis`}); 
+        res.status(500).json({ error: "Internal server error" }); 
     }
 
 }
@@ -113,7 +113,6 @@ export const deleteCandidate = async (req, res) =>{
     const { id } = req.params;
 
     try {
-
         //Consulta candidato por id, usamos rowCount porque con DELETE row.length siempre devuelve 0
         const { rowCount } = await pool.query('DELETE FROM candidates WHERE id = $1', [id]);
 

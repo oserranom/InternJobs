@@ -68,10 +68,10 @@ export const getCompanie = async (req, res) =>{
     const { id } = req.params;
 
     try {
-        const { rows } = pool.query("SELECT * FROM companies WHERE id = $1", [id]);
-        if(rows.length === 0) return res.status(400).json({ message: "La empresa no existe" }); 
-        res.json[0]; 
-        
+        const { rows } = await pool.query("SELECT * FROM companies WHERE id = $1", [id]);
+        if(rows.length === 0) return res.status(404).json({ message: "La empresa no existe" }); 
+        res.json(rows[0]); 
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal server error' }); 
@@ -80,11 +80,21 @@ export const getCompanie = async (req, res) =>{
 
 
 export const updateCompanie = async (req, res) =>{
-    res.json({message: 'Esto es una prueba'});
+    res.json({ message: 'Esto es una prueba' });
 }
 
 export const deleteCompanie = async (req, res) =>{
-    res.json({message: 'Esto es una prueba'});
+    const { id } = req.params;
+    
+    try {
+        //Consulta candidato por id, usamos rowCount porque con DELETE row.length siempre devuelve 0
+        const { rowCount } = await pool.query("DELETE FROM companies WHERE id = $1", [id]);
+        if(rowCount === 0) return res.status(404).json({ message: "La empresa no existe" });
+        return res.status(200).json({ message: "La empresa ha sido eliminada con éxito" }); 
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Internal server error" }); 
+    }
 }
 
 export const createJobOffer = async (req, res) =>{
