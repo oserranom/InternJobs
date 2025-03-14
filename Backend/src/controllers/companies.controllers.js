@@ -1,10 +1,34 @@
 import { pool } from "../db.js";
+import { isValidEmail } from "../helpers/validations.js";
 
 export const createCompanie = async (req, res) =>{
     try {
+        const { name, email, password, industry, description, company_url } = req.body;
+
+        //Validación campos nulos y espacios vacíos
+        if(!name?.trim() || !email?.trim() || !password?.trim()){
+            return res.status(400).json({ message: "Los campos nombre, email y password son requeridos" }); 
+        } 
+
+        //Validación regex email
+        if(!isValidEmail(email)) return res.status(400).json({ message: 'El email introducido no es válido' });
+
+        //Validación password
+        if (password.length < 6) return res.status(400).json({message: 'La contraseña debe de contener como mínimo 6 dígitos'});
+
+        //Pasa validaciones, sentencia INSERT
+        const { rows } = await pool.query(
+            'INSERT INTO companies (name, email, password, industry, description, company_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING*',
+            [name, email, password, industry, description, company_url]
+        );
         
+        return res.json(rows[0]); 
+
+
     } catch (error) {
         console.log(error);
+        //Separamos el error 23505 de postgres para devolver email ya registrado en la BBDD
+        if(error?.code === '23505') return res.status(409).json({message: 'Este email ya está registrado'});
         res.status(500).json({ message: "internal server error"});
     }
 }
@@ -41,7 +65,17 @@ export const loginCompanie = async (req, res) =>{
 }
 
 export const getCompanie = async (req, res) =>{
-    res.json({message: 'Esto es una prueba'});
+    const { id } = req.params;
+
+    try {
+        const { rows } = pool.query("SELECT * FROM companies WHERE id = $1", [id]);
+        if(rows.length === 0) return res.status(400).json({ message: "La empresa no existe" }); 
+        res.json[0]; 
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal server error' }); 
+    }
 }
 
 

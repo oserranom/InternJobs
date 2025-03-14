@@ -1,4 +1,5 @@
 import { pool } from "../db.js";
+import { isValidEmail, isValidPhone } from "../helpers/validations.js";
 
 
 export const loginCandidate = async (req, res) =>{
@@ -43,7 +44,7 @@ export const getCandidate = async (req, res) =>{
     try {
         //Consulta por id, si no devuelve 1 row el candidato no existe 
         const { rows } = await pool.query("SELECT * FROM candidates WHERE id = $1", [id]);
-        if(rows.length === 0) return res.status(404).json({message: `El usuario con id: ${id} no existe`}); 
+        if(rows.length === 0) return res.status(404).json({ message: "El candidato no existe" }); 
         res.json(rows[0]); 
 
     } catch (error) {
@@ -64,28 +65,24 @@ export const createCandidate = async (req, res) =>{
             return res.status(400).json({ message: 'Nombre, email, contraseña y tlf son requeridos' });
         }
 
-        //Validación de email válido "algo"@"algo"."algo"
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({ message: 'El email no tiene un formato válido' });
-        }
+        //Validación de email según expresión regular.
+        if (!isValidEmail(email)) return res.status(400).json({ message: 'El email introducido no es válido' }); 
 
         //validación de contraseña de como mínimo 6 dígitos
         if (password.length < 6) return res.status(400).json({message: 'La contraseña debe de contener como mínimo 6 dígitos'});
 
-        //Validación de número de teléfono, solo números y mínimo 9.
-        const phoneRegex = /^\d{9,}$/;
-        if (!phoneRegex.test(phone_number)) {
-            return res.status(400).json({ message: 'El número de teléfono debe contener al menos 9 dígitos' });
-        }
+        //Validación de número según expresión regular.
+        if (!isValidPhone(phone_number)) return res.status(400).json({ message: 'Introduce un número válido' }); 
 
         //Ha pasado las validaciones: consulta INSERT
         const {rows} = await pool.query(
-                        "INSERT INTO candidates (name, email, password, cv, phone_number) VALUES ($1, $2, $3, $4, $5) RETURNING*",
-                        [name, email, password, cv || null, phone_number]);
+            "INSERT INTO candidates (name, email, password, cv, phone_number) VALUES ($1, $2, $3, $4, $5) RETURNING*",
+            [name, email, password, cv || null, phone_number]
+        );
         return res.json(rows[0]); 
         
     } catch (error) {
+        console.log(error); 
         //Separamos el error 23505 de postgres para devolver email ya registrado en la BBDD
         if(error?.code === '23505') return res.status(409).json({message: 'Este email ya está registrado'});
         return res.status(500).json({message: 'Internal server error'}); 
