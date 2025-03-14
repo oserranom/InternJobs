@@ -1,7 +1,12 @@
 import { pool } from "../db.js";
 
 export const createCompanie = async (req, res) =>{
-    res.json({message: 'Esto es una prueba'});
+    try {
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "internal server error"});
+    }
 }
 
 export const loginCompanie = async (req, res) =>{
