@@ -1,5 +1,5 @@
 import { pool } from "../db.js";
-import { isValidEmail } from "../helpers/validations.js";
+import { isValidEmail, isValidSalary } from "../helpers/validations.js";
 
 export const createCompanie = async (req, res) =>{
     try {
@@ -96,6 +96,7 @@ export const updateCompanie = async (req, res) =>{
 
         if(rows.length === 0) return res.status(404).json({ message: "La empresa no existe" });
         
+        //Respuesta
         return res.json({
             message: "Los datos han sido actualizados",
             companie: {
@@ -128,5 +129,32 @@ export const deleteCompanie = async (req, res) =>{
 }
 
 export const createJobOffer = async (req, res) =>{
-    res.json({ message: 'Hola mi gente' }); //Falta hacer 
+    const { id } = req.params;
+    const { title, description, location, salary, education_level, study_field } = req.body; 
+
+    try {
+        //Validación
+        if(!title?.trim() || !description?.trim()) return res.status(400).json({ message: "Los campos title y description son requeridos" });
+        if(isValidSalary(salary)) return res.status(400).json({ message: "Introduce un sueldo númerico y positivo" }); 
+
+        //Consulta para validar si la empresa existe en la BBDD
+        const companyResult = await pool.query("SELECT id FROM companies WHERE id = $1", [id]);
+        if(companyResult.rows.length === 0) return res.status(404).json({ message: "La empresa no existe" }); 
+        
+        //Validación OK e ID válido
+        const { rows } = await pool.query(
+            "INSERT INTO job_offers (company_id, title, description, location, salary, education_level, study_field) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+            [id, title, description, location, salary, education_level, study_field]
+        );
+        
+        //Respuestas
+        return res.status(201).json({
+            message: "La oferta ha sido creada con éxito",
+            job_offer: rows[0]
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" }); 
+    }
 }

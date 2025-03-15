@@ -10,3 +10,7 @@ export const isValidPhone = (number) =>{
     const phoneRegex = /^\d{9,}$/;
     return phoneRegex.test(number); 
 }
+
+export const isValidSalary = (salary) =>{
+    return !(salary !== undefined && !isNaN(parseFloat(salary) && parseFloat(salary) > 0)); 
+}
