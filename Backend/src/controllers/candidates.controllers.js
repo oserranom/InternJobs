@@ -94,12 +94,28 @@ export const updateCandidate = async (req, res) =>{
    const { name, email, phone_number, cv } = req.body;
 
     try {
+        //Validaciones
+        if(!name?.trim() || !email?.trim() || !phone_number?.trim()) return res.status(400).json({ message: "Los campos nombre, email y tlf son requeridos" });
+        if(!isValidEmail(email)) return res.status(400).json({ message: "El email introducido no es válido" });
+        if(!isValidPhone(phone_number)) return res.status(400).json({ message: "El tlf introducido no es válido" });
+
         //Consulta update de los 4 parámetros susceptibles de cambio pasando el id como referencia
         const { rows } = await pool.query(
             "UPDATE candidates SET name = $1, email = $2, phone_number = $3, cv = $4 WHERE id = $5 RETURNING *",
-            [name, email, phone_number, cv, id]);
+            [name, email, phone_number, cv, id]
+        );
 
-        return res.json(rows[0]); 
+        if(rows.length === 0) return res.status(404).json({ message: "El candidato no existe" }); 
+
+        return res.json({ 
+            message: "Los datos han sido actualizados",
+            candidate: {
+                name: rows[0].name,
+                email: rows[0].email,
+                phone_number: rows[0].phone_number,
+                cv: rows[0].cv,
+            }
+        }); 
 
     } catch (error) {
 

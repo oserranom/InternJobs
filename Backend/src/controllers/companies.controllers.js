@@ -80,7 +80,37 @@ export const getCompanie = async (req, res) =>{
 
 
 export const updateCompanie = async (req, res) =>{
-    res.json({ message: 'Esto es una prueba' });
+    const { id } = req.params;
+    const { name, email, description, company_url } = req.body;
+
+    try {
+        //Validaciones
+        if(!name?.trim() || !email?.trim()) return res.status(400).json({ message: "Los campos de nombre y email son requeridos" });
+        if(!isValidEmail(email)) return res.status(400).json({ message: "El email introducido no es válido" }); 
+
+        //Validación OK, consulta update.
+        const { rows } = await pool.query(
+            "UPDATE companies SET name = $1, email = $2, description = $3, company_url = $4 WHERE id = $5 RETURNING*",
+            [name, email, description, company_url, id]
+        );
+
+        if(rows.length === 0) return res.status(404).json({ message: "La empresa no existe" });
+        
+        return res.json({
+            message: "Los datos han sido actualizados",
+            companie: {
+                name: rows[0].name,
+                email: rows[0].email,
+                description: rows[0].description,
+                company_url: rows[0].company_url
+            }
+        });
+
+    } catch (error) {
+        if(error?.code === '23505') return res.status(409).json({message: 'Este email ya está registrado'});
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" }); 
+    }
 }
 
 export const deleteCompanie = async (req, res) =>{
