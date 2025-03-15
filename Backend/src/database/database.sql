@@ -42,6 +42,7 @@ CREATE TABLE applications (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     candidate_id UUID NOT NULL,
     job_offer_id UUID NOT NULL,
+    cover_letter TEXT,
     status VARCHAR(20) CHECK (status IN ('applied', 'interview', 'rejected', 'hired')) NOT NULL DEFAULT 'applied',
     applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (candidate_id) REFERENCES candidates(id) ON DELETE CASCADE,
