@@ -76,10 +76,10 @@ export const createCandidate = async (req, res) =>{
 
         //Ha pasado las validaciones: consulta INSERT
         const {rows} = await pool.query(
-            "INSERT INTO candidates (name, email, password, cv, phone_number) VALUES ($1, $2, $3, $4, $5) RETURNING*",
+            "INSERT INTO candidates (name, email, password, cv, phone_number) VALUES ($1, $2, $3, $4, $5) RETURNING name email",
             [name, email, password, cv || null, phone_number]
         );
-        return res.json(rows[0]); 
+        return res.status(201).json(rows[0]); 
         
     } catch (error) {
         console.log(error); 

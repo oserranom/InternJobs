@@ -18,11 +18,17 @@ export const createCompanie = async (req, res) =>{
 
         //Pasa validaciones, sentencia INSERT
         const { rows } = await pool.query(
-            'INSERT INTO companies (name, email, password, industry, description, company_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING*',
+            'INSERT INTO companies (name, email, password, industry, description, company_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING name, email',
             [name, email, password, industry, description, company_url]
         );
         
-        return res.json(rows[0]); 
+        return res.status(201).json({
+            message: "Empresa registrada con éxito",
+            companie: {
+                name: rows[0].name,
+                email: rows[0].email
+            }
+        }); 
 
 
     } catch (error) {
