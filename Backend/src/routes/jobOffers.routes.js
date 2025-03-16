@@ -1,11 +1,13 @@
 import { Router } from "express";
-import { getJobOffers } from "../controllers/jobOffers.controllers.js";
+import { getJobOffers, getJobOfferById } from "../controllers/jobOffers.controllers.js";
 
 
 const jobOffersRouter = Router();
 
 
 jobOffersRouter.get('/', getJobOffers);
+
+jobOffersRouter.get('/:id', getJobOfferById); 
 
 
 

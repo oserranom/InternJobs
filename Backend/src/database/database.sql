@@ -46,6 +46,7 @@ CREATE TABLE applications (
     status VARCHAR(20) CHECK (status IN ('applied', 'interview', 'rejected', 'hired')) NOT NULL DEFAULT 'applied',
     applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (candidate_id) REFERENCES candidates(id) ON DELETE CASCADE,
-    FOREIGN KEY (job_offer_id) REFERENCES job_offers(id) ON DELETE CASCADE
+    FOREIGN KEY (job_offer_id) REFERENCES job_offers(id) ON DELETE CASCADE,
+    UNIQUE (candidate_id, Job_offer_id)
 );
 

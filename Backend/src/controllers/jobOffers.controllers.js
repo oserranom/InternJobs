@@ -13,3 +13,6 @@ export const getJobOffers = async (req, res) =>{
     }
 }
 
+export const getJobOfferById = async (req, res) =>{
+    return res.json({ message: "hola"}); 
+}
