@@ -158,3 +158,22 @@ export const createJobOffer = async (req, res) =>{
         return res.status(500).json({ message: "Internal server error" }); 
     }
 }
+
+export const getJobOffersByCompany = async (req, res) =>{
+    const { id } = req.params;
+
+    try {
+       const { rows } = await pool.query(
+        "SELECT job_offers.*, companies.name AS company_name FROM job_offers JOIN companies ON job_offers.company_id = companies.id WHERE job_offers.company_id = $1",
+        [id]
+       ); 
+
+        if(rows.length === 0) return res.status(404).json({ message: "Esta empresa aún no ha publicado ofertas" }); 
+
+        return res.json(rows); 
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}

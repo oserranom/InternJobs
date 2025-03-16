@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCompanie, getCompanie, updateCompanie, deleteCompanie, createJobOffer, loginCompanie } from "../controllers/companies.controllers.js";
+import { createCompanie, getCompanie, updateCompanie, deleteCompanie, createJobOffer, loginCompanie, getJobOffersByCompany } from "../controllers/companies.controllers.js";
 
 const companiesRouter = Router(); 
 
@@ -14,6 +14,8 @@ companiesRouter.put('/:id', updateCompanie);
 companiesRouter.delete('/:id', deleteCompanie); 
 
 companiesRouter.post('/:id/jobs', createJobOffer); 
+
+companiesRouter.get('/:id/jobs', getJobOffersByCompany); 
 
 
 export default companiesRouter; 
