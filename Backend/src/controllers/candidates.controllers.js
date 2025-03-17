@@ -1,6 +1,7 @@
 import { pool } from "../db.js";
 import { isValidEmail, isValidPhone } from "../helpers/validations.js";
-import { passHash } from "../helpers/passwordhash.js";
+import { passHash, passMatch } from "../helpers/passwordhash.js";
+import { generateJWT } from "../helpers/jwtGenerator.js";
 
 
 export const loginCandidate = async (req, res) =>{
@@ -17,9 +18,12 @@ export const loginCandidate = async (req, res) =>{
         //res 404 en caso de no encontrar candidate
         if(rows.length === 0) return res.status(404).json({ error: `El candidato con email: ${email} no existe`}); 
 
-        //Comprobar contraseña, sin HASH por ahora
+        //Comprobar contraseña
         const candidate = rows[0]; 
-        if (candidate.password !== password) return res.status(401).json({error: 'Password incorrecto'});
+        if (!passMatch(candidate.password, password)) return res.status(401).json({ error: 'Password incorrecto' });
+
+        //Generar JWT para sesión
+        const token = await generateJWT(email); 
 
         //Pasa validación y password coincide
         res.status(200).json({
@@ -28,6 +32,7 @@ export const loginCandidate = async (req, res) =>{
                 id: candidate.id,
                 name: candidate.name,
                 email: candidate.email,
+                token
             }
         }); 
 
@@ -75,10 +80,13 @@ export const createCandidate = async (req, res) =>{
         //Validación de número según expresión regular.
         if (!isValidPhone(phone_number)) return res.status(400).json({ message: 'Introduce un número válido' }); 
 
-        //Ha pasado las validaciones, hasheamos pasword y consulta INSERT
+        //Ha pasado las validaciones: 
+        //Hash de password
         const hashedPassword = await passHash(password); 
+
+        //Consulta insert
         const {rows} = await pool.query(
-            "INSERT INTO candidates (name, email, password, cv, phone_number) VALUES ($1, $2, $3, $4, $5) RETURNING name email",
+            "INSERT INTO candidates (name, email, password, cv, phone_number) VALUES ($1, $2, $3, $4, $5) RETURNING name, email",
             [name, email, hashedPassword, cv || null, phone_number]
         );
         return res.status(201).json({
