@@ -1,5 +1,6 @@
 import { pool } from "../db.js";
 import { isValidEmail, isValidPhone } from "../helpers/validations.js";
+import { passHash } from "../helpers/passwordhash.js";
 
 
 export const loginCandidate = async (req, res) =>{
@@ -74,12 +75,19 @@ export const createCandidate = async (req, res) =>{
         //Validación de número según expresión regular.
         if (!isValidPhone(phone_number)) return res.status(400).json({ message: 'Introduce un número válido' }); 
 
-        //Ha pasado las validaciones: consulta INSERT
+        //Ha pasado las validaciones, hasheamos pasword y consulta INSERT
+        const hashedPassword = await passHash(password); 
         const {rows} = await pool.query(
             "INSERT INTO candidates (name, email, password, cv, phone_number) VALUES ($1, $2, $3, $4, $5) RETURNING name email",
-            [name, email, password, cv || null, phone_number]
+            [name, email, hashedPassword, cv || null, phone_number]
         );
-        return res.status(201).json(rows[0]); 
+        return res.status(201).json({
+            message: "Candidato registrado",
+            candidate: {
+                name: rows[0].name,
+                email: rows[0].email
+            }
+        }); 
         
     } catch (error) {
         console.log(error); 
