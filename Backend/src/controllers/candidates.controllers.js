@@ -4,6 +4,7 @@ import { passHash, passMatch } from "../helpers/passwordhash.js";
 import { generateJWT } from "../helpers/jwtGenerator.js";
 
 
+
 export const loginCandidate = async (req, res) =>{
     try {
 
@@ -20,7 +21,8 @@ export const loginCandidate = async (req, res) =>{
 
         //Comprobar contraseña
         const candidate = rows[0]; 
-        if (!passMatch(candidate.password, password)) return res.status(401).json({ error: 'Password incorrecto' });
+        const match = await passMatch(password, candidate.password); 
+        if (!match) return res.status(401).json({ error: 'Password incorrecto' });
 
         //Generar JWT para sesión
         const token = await generateJWT(email); 
