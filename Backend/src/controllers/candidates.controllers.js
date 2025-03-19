@@ -47,11 +47,10 @@ export const loginCandidate = async (req, res) =>{
 
 
 export const getCandidate = async (req, res) =>{
-    const { id } = req.params;
 
     try {
         //Consulta por id, si no devuelve 1 row el candidato no existe 
-        const { rows } = await pool.query("SELECT * FROM candidates WHERE id = $1", [id]);
+        const { rows } = await pool.query("SELECT * FROM candidates WHERE id = $1", [req.id]);
         if(rows.length === 0) return res.status(404).json({ message: "El candidato no existe" }); 
         res.json(rows[0]); 
 
