@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 const verifyToken = (req, res, next) =>{
 
     let token = req.headers.authorization; 
-    if(!token) return res.status(401).json({ message: "Se requiere token de autorización" }); 
+    if(!token || !token.startsWith("Bearer ")) return res.status(401).json({ message: "Se requiere token de autorización válido" }); 
 
     //"Limpiar" el token para eliminar la parte de Bearer
     token = token.split(" ")[1]; 
