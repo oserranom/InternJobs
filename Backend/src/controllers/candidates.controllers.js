@@ -25,7 +25,7 @@ export const loginCandidate = async (req, res) =>{
         if (!match) return res.status(401).json({ error: 'Password incorrecto' });
 
         //Generar JWT para sesión
-        const token = await generateJWT(candidate.id, candidate.email); 
+        const token = await generateJWT({id: candidate.id, email: candidate.email}); 
 
         //Pasa validación y password coincide
         res.status(200).json({
@@ -50,6 +50,7 @@ export const getCandidate = async (req, res) =>{
 
     try {
         //Consulta por id, si no devuelve 1 row el candidato no existe 
+        //La id ha sido enviada a la req. desde el middleware
         const { rows } = await pool.query("SELECT * FROM candidates WHERE id = $1", [req.id]);
         if(rows.length === 0) return res.status(404).json({ message: "El candidato no existe" }); 
         res.json(rows[0]); 
