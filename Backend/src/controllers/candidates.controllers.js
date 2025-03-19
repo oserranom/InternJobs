@@ -17,7 +17,7 @@ export const loginCandidate = async (req, res) =>{
         const { rows } = await pool.query("SELECT * FROM candidates WHERE email = $1", [email]); 
 
         //res 404 en caso de no encontrar candidate
-        if(rows.length === 0) return res.status(404).json({ error: `El candidato con email: ${email} no existe`}); 
+        if(rows.length === 0) return res.status(404).json({ error: `El candidato con email '${email}' no existe`}); 
 
         //Comprobar contraseña
         const candidate = rows[0]; 
@@ -25,7 +25,7 @@ export const loginCandidate = async (req, res) =>{
         if (!match) return res.status(401).json({ error: 'Password incorrecto' });
 
         //Generar JWT para sesión
-        const token = await generateJWT(email); 
+        const token = await generateJWT(candidate.id, candidate.email); 
 
         //Pasa validación y password coincide
         res.status(200).json({

@@ -1,5 +1,8 @@
 import { pool } from "../db.js";
+import { generateJWT } from "../helpers/jwtGenerator.js";
 import { isValidEmail, isValidSalary } from "../helpers/validations.js";
+import { passHash, passMatch } from "../helpers/passwordhash.js";
+
 
 export const createCompanie = async (req, res) =>{
     try {
@@ -16,10 +19,14 @@ export const createCompanie = async (req, res) =>{
         //Validación password
         if (password.length < 6) return res.status(400).json({message: 'La contraseña debe de contener como mínimo 6 dígitos'});
 
-        //Pasa validaciones, sentencia INSERT
+        //Pasa validaciones
+        //Hash de password
+        const hashedPassword = await passHash(password); 
+
+        //Consulta insert
         const { rows } = await pool.query(
             'INSERT INTO companies (name, email, password, industry, description, company_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING name, email',
-            [name, email, password, industry, description, company_url]
+            [name, email, hashedPassword, industry, description, company_url]
         );
         
         return res.status(201).json({
@@ -47,12 +54,17 @@ export const loginCompanie = async (req, res) =>{
 
         //Sentencia buscar coincidencia por email
         const { rows } = await pool.query("SELECT * FROM companies WHERE email = $1", [email]);
+
         //Validar si la companie existe en la BBDD
         if(rows.length === 0) return res.status(404).json({message: `La empresa con email: ${email} no existe`});
 
         //Validación de coincidencia de passwords
         const companie = rows[0];
-        if(companie.password !== password) return res.status(401).json({ message: `Password incorrecto`}); 
+        const match = await passMatch(password, companie.password); 
+        if(!match) return res.status(401).json({ message: `Password incorrecto`}); 
+
+        //Generar JWT para sesión
+        const token = await generateJWT(companie.id, companie.email);
 
         //Validaciones OK, Password coincide:
         res.status(200).json({
@@ -60,7 +72,8 @@ export const loginCompanie = async (req, res) =>{
             companie: {
                 id: companie.id,
                 name: companie.name,
-                email: companie.email 
+                email: companie.email,
+                token 
             }
         });
         
