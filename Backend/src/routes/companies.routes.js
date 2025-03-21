@@ -1,21 +1,22 @@
 import { Router } from "express";
 import { createCompanie, getCompanie, updateCompanie, deleteCompanie, createJobOffer, loginCompanie, getJobOffersByCompany } from "../controllers/companies.controllers.js";
+import verifyToken from "../middlewares/jwt.middleware.js";
 
 const companiesRouter = Router(); 
 
+//Public
 companiesRouter.post('/', createCompanie);
-
 companiesRouter.post('/login', loginCompanie); 
 
-companiesRouter.get('/:id', getCompanie);
 
-companiesRouter.put('/:id', updateCompanie);
+//Private profile
+companiesRouter.get('/profile', verifyToken, getCompanie);
+companiesRouter.put('/profile', verifyToken, updateCompanie);
+companiesRouter.delete('/profile', verifyToken, deleteCompanie); 
 
-companiesRouter.delete('/:id', deleteCompanie); 
-
-companiesRouter.post('/:id/jobs', createJobOffer); 
-
-companiesRouter.get('/:id/jobs', getJobOffersByCompany); 
+//Private offers management 
+companiesRouter.post('/jobs', verifyToken, createJobOffer); 
+companiesRouter.get('/jobs', verifyToken, getJobOffersByCompany); 
 
 
 export default companiesRouter; 

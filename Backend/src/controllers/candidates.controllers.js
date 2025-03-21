@@ -113,7 +113,6 @@ export const createCandidate = async (req, res) =>{
 }
 
 export const updateCandidate = async (req, res) =>{
-   const { id } = req.params;
    const { name, email, phone_number, cv } = req.body;
 
     try {
@@ -125,7 +124,7 @@ export const updateCandidate = async (req, res) =>{
         //Consulta update de los 4 parámetros susceptibles de cambio pasando el id como referencia
         const { rows } = await pool.query(
             "UPDATE candidates SET name = $1, email = $2, phone_number = $3, cv = $4 WHERE id = $5 RETURNING *",
-            [name, email, phone_number, cv, id]
+            [name, email, phone_number, cv, req.id]
         );
 
         if(rows.length === 0) return res.status(404).json({ message: "El candidato no existe" }); 
@@ -150,11 +149,10 @@ export const updateCandidate = async (req, res) =>{
 
 
 export const deleteCandidate = async (req, res) =>{
-    const { id } = req.params;
 
     try {
         //Consulta candidato por id, usamos rowCount porque con DELETE row.length siempre devuelve 0
-        const { rowCount } = await pool.query('DELETE FROM candidates WHERE id = $1', [id]);
+        const { rowCount } = await pool.query('DELETE FROM candidates WHERE id = $1', [req.id]);
 
         if(rowCount === 0) return res.status(404).json({ message: 'EL candidato no existe'});
 
