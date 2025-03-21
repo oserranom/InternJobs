@@ -51,9 +51,14 @@ export const getCandidate = async (req, res) =>{
     try {
         //Consulta por id, si no devuelve 1 row el candidato no existe 
         //La id ha sido enviada a la req. desde el middleware
-        const { rows } = await pool.query("SELECT * FROM candidates WHERE id = $1", [req.id]);
+        const { rows } = await pool.query("SELECT name, email, phone_number, cv FROM candidates WHERE id = $1", [req.id]);
+
         if(rows.length === 0) return res.status(404).json({ message: "El candidato no existe" }); 
-        res.json(rows[0]); 
+
+        res.status(200).json({
+            message: "Candidato obtenido",
+            candidate: rows[0]
+        });
 
     } catch (error) {
         console.log(error);
@@ -142,6 +147,7 @@ export const updateCandidate = async (req, res) =>{
         return res.status(500).json({ message: 'Internal server error' }); 
     }
 }
+
 
 export const deleteCandidate = async (req, res) =>{
     const { id } = req.params;
