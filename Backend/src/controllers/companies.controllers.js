@@ -61,10 +61,10 @@ export const loginCompanie = async (req, res) =>{
         //Validación de coincidencia de passwords
         const companie = rows[0];
         const match = await passMatch(password, companie.password); 
-        if(!match) return res.status(401).json({ message: `Password incorrecto`}); 
+        if(!match) return res.status(401).json({ message: "Password incorrecto" }); 
 
         //Generar JWT para sesión
-        const token = await generateJWT(companie.id, companie.email);
+        const token = await generateJWT({ id: companie.id, email: companie.email });
 
         //Validaciones OK, Password coincide:
         res.status(200).json({
@@ -84,10 +84,9 @@ export const loginCompanie = async (req, res) =>{
 }
 
 export const getCompanie = async (req, res) =>{
-    const { id } = req.params;
 
     try {
-        const { rows } = await pool.query("SELECT * FROM companies WHERE id = $1", [id]);
+        const { rows } = await pool.query("SELECT * FROM companies WHERE id = $1", [req.id]);
         if(rows.length === 0) return res.status(404).json({ message: "La empresa no existe" }); 
         res.json(rows[0]); 
 
