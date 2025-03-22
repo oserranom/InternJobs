@@ -11,6 +11,3 @@ export const isValidPhone = (number) =>{
     return phoneRegex.test(number); 
 }
 
-export const isValidSalary = (salary) =>{
-    return !(salary !== undefined && !isNaN(parseFloat(salary) && parseFloat(salary) > 0)); 
-}
