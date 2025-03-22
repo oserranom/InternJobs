@@ -1,9 +1,9 @@
 import { pool } from "../db.js";
 import { generateJWT } from "../helpers/jwtGenerator.js";
-import { isValidEmail, isValidSalary } from "../helpers/validations.js";
+import { isValidEmail } from "../helpers/validations.js";
 import { passHash, passMatch } from "../helpers/passwordhash.js";
 
-
+//PUBLIC
 export const createCompanie = async (req, res) =>{
     try {
         const { name, email, password, industry, description, company_url } = req.body;
@@ -64,7 +64,8 @@ export const loginCompanie = async (req, res) =>{
         if(!match) return res.status(401).json({ message: "Password incorrecto" }); 
 
         //Generar JWT para sesión
-        const token = await generateJWT({ id: companie.id, email: companie.email });
+        const token = await generateJWT({ id: companie.id, email: companie.email, role: "Company" });
+        
 
         //Validaciones OK, Password coincide:
         res.status(200).json({
@@ -83,7 +84,11 @@ export const loginCompanie = async (req, res) =>{
     }  
 }
 
+
+//PRIVATE PROFILE
 export const getCompany = async (req, res) =>{
+    //Validación de rol
+    if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "}); 
 
     try {
         const { rows } = await pool.query("SELECT * FROM companies WHERE id = $1", [req.id]);
@@ -111,6 +116,8 @@ export const getCompany = async (req, res) =>{
 
 
 export const updateCompany = async (req, res) =>{
+
+    if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
 
     const { name, email, description, company_url } = req.body;
 
@@ -149,6 +156,8 @@ export const updateCompany = async (req, res) =>{
 }
 
 export const deleteCompany = async (req, res) =>{
+
+    if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
     
     try {
         //Consulta empresa por id, usamos rowCount porque con DELETE row.length siempre devuelve 0
@@ -162,23 +171,24 @@ export const deleteCompany = async (req, res) =>{
     }
 }
 
+
+//PRIVATE JOB OFFERS MANAGEMENT
 export const createJobOffer = async (req, res) =>{
-    const { id } = req.params;
+
+    if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
+
     const { title, description, location, salary, education_level, study_field } = req.body; 
 
     try {
         //Validación
         if(!title?.trim() || !description?.trim()) return res.status(400).json({ message: "Los campos title y description son requeridos" });
-        if(isValidSalary(salary)) return res.status(400).json({ message: "Introduce un sueldo númerico y positivo" }); 
-
-        //Consulta para validar si la empresa existe en la BBDD
-        const companyResult = await pool.query("SELECT id FROM companies WHERE id = $1", [id]);
-        if(companyResult.rows.length === 0) return res.status(404).json({ message: "La empresa no existe" }); 
+        if(!salary || isNaN(salary) || salary < 0) return res.status(400).json({ message: "Introduce un sueldo númerico y positivo" }); 
         
         //Validación OK e ID válido
         const { rows } = await pool.query(
-            "INSERT INTO job_offers (company_id, title, description, location, salary, education_level, study_field) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
-            [id, title, description, location, salary, education_level, study_field]
+            `INSERT INTO job_offers (company_id, title, description, location, salary, education_level, study_field) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+            [req.id, title, description, location, salary, education_level, study_field]
         );
         
         //Respuestas
@@ -193,13 +203,16 @@ export const createJobOffer = async (req, res) =>{
     }
 }
 
+
 export const getJobOffersByCompany = async (req, res) =>{
-    const { id } = req.params;
+
+    if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
 
     try {
        const { rows } = await pool.query(
-        "SELECT job_offers.*, companies.name AS company_name FROM job_offers JOIN companies ON job_offers.company_id = companies.id WHERE job_offers.company_id = $1",
-        [id]
+        `SELECT job_offers.*, companies.name AS company_name FROM job_offers 
+        JOIN companies ON job_offers.company_id = companies.id WHERE job_offers.company_id = $1`,
+        [req.id]
        ); 
 
         if(rows.length === 0) return res.status(404).json({ message: "Esta empresa aún no ha publicado ofertas" }); 

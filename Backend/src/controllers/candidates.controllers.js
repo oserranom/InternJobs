@@ -4,7 +4,7 @@ import { passHash, passMatch } from "../helpers/passwordhash.js";
 import { generateJWT } from "../helpers/jwtGenerator.js";
 
 
-
+//PUBLIC
 export const loginCandidate = async (req, res) =>{
     try {
 
@@ -25,7 +25,7 @@ export const loginCandidate = async (req, res) =>{
         if (!match) return res.status(401).json({ error: 'Password incorrecto' });
 
         //Generar JWT para sesión
-        const token = await generateJWT({id: candidate.id, email: candidate.email}); 
+        const token = await generateJWT({ id: candidate.id, email: candidate.email, role: "Candidate" }); 
 
         //Pasa validación y password coincide
         res.status(200).json({
@@ -42,29 +42,6 @@ export const loginCandidate = async (req, res) =>{
         console.log(error);
         res.status(500).json({ error: 'Internal server error'}); 
     }
-}
-
-
-
-export const getCandidate = async (req, res) =>{
-
-    try {
-        //Consulta por id, si no devuelve 1 row el candidato no existe 
-        //La id ha sido enviada a la req. desde el middleware
-        const { rows } = await pool.query("SELECT name, email, phone_number, cv FROM candidates WHERE id = $1", [req.id]);
-
-        if(rows.length === 0) return res.status(404).json({ message: "El candidato no existe" }); 
-
-        res.status(200).json({
-            message: "Candidato obtenido",
-            candidate: rows[0]
-        });
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "Internal server error" }); 
-    }
-
 }
 
 
@@ -112,8 +89,39 @@ export const createCandidate = async (req, res) =>{
     }
 }
 
+
+//PRIVATE
+export const getCandidate = async (req, res) =>{
+
+    //Validación de rol
+    if(req.role !== "Candidate") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
+
+    try {
+        //Consulta por id, si no devuelve 1 row el candidato no existe 
+        //La id ha sido enviada a la req. desde el middleware
+        const { rows } = await pool.query("SELECT name, email, phone_number, cv FROM candidates WHERE id = $1", [req.id]);
+
+        if(rows.length === 0) return res.status(404).json({ message: "El candidato no existe" }); 
+
+        res.status(200).json({
+            message: "Candidato obtenido",
+            candidate: rows[0]
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Internal server error" }); 
+    }
+
+}
+
+
+
 export const updateCandidate = async (req, res) =>{
-   const { name, email, phone_number, cv } = req.body;
+
+    if(req.role !== "Candidate") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
+
+    const { name, email, phone_number, cv } = req.body;
 
     try {
         //Validaciones
@@ -149,6 +157,8 @@ export const updateCandidate = async (req, res) =>{
 
 
 export const deleteCandidate = async (req, res) =>{
+
+    if(req.role !== "Candidate") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
 
     try {
         //Consulta candidato por id, usamos rowCount porque con DELETE row.length siempre devuelve 0
