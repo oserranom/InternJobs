@@ -19,4 +19,4 @@ companiesRouter.post('/jobs', verifyToken, createJobOffer);
 companiesRouter.get('/jobs', verifyToken, getJobOffersByCompany); 
 
 
-export default companiesRouter; 
+export default companiesRouter;
