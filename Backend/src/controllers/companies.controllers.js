@@ -83,33 +83,49 @@ export const loginCompanie = async (req, res) =>{
     }  
 }
 
-export const getCompanie = async (req, res) =>{
+export const getCompany = async (req, res) =>{
 
     try {
         const { rows } = await pool.query("SELECT * FROM companies WHERE id = $1", [req.id]);
         if(rows.length === 0) return res.status(404).json({ message: "La empresa no existe" }); 
-        res.json(rows[0]); 
+        const company = rows[0]; 
+
+        return res.status(200).json({
+            message: "Empresa identificada",
+            company: {
+                id: company.id,
+                name: company.name,
+                email: company.email,
+                industry: company.industry,
+                description: company.description,
+                company_url: company.company_url
+            }
+        }); 
 
     } catch (error) {
+
         console.log(error);
         res.status(500).json({ message: 'Internal server error' }); 
     }
 }
 
 
-export const updateCompanie = async (req, res) =>{
-    const { id } = req.params;
+export const updateCompany = async (req, res) =>{
+
     const { name, email, description, company_url } = req.body;
 
     try {
         //Validaciones
-        if(!name?.trim() || !email?.trim()) return res.status(400).json({ message: "Los campos de nombre y email son requeridos" });
+        if(!name?.trim() || !email?.trim() || !description?.trim() || !company_url?.trim){
+            return res.status(400).json({ message: "Todos los campos son requeridos" });
+        } 
+
         if(!isValidEmail(email)) return res.status(400).json({ message: "El email introducido no es válido" }); 
 
         //Validación OK, consulta update.
         const { rows } = await pool.query(
             "UPDATE companies SET name = $1, email = $2, description = $3, company_url = $4 WHERE id = $5 RETURNING*",
-            [name, email, description, company_url, id]
+            [name, email, description, company_url, req.id]
         );
 
         if(rows.length === 0) return res.status(404).json({ message: "La empresa no existe" });
@@ -132,14 +148,14 @@ export const updateCompanie = async (req, res) =>{
     }
 }
 
-export const deleteCompanie = async (req, res) =>{
-    const { id } = req.params;
+export const deleteCompany = async (req, res) =>{
     
     try {
-        //Consulta candidato por id, usamos rowCount porque con DELETE row.length siempre devuelve 0
-        const { rowCount } = await pool.query("DELETE FROM companies WHERE id = $1", [id]);
+        //Consulta empresa por id, usamos rowCount porque con DELETE row.length siempre devuelve 0
+        const { rowCount } = await pool.query("DELETE FROM companies WHERE id = $1", [req.id]);
         if(rowCount === 0) return res.status(404).json({ message: "La empresa no existe" });
         return res.status(200).json({ message: "La empresa ha sido eliminada con éxito" }); 
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Internal server error" }); 
