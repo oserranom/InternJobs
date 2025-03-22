@@ -1,3 +1,6 @@
+CREATE DATABASE intern_jobs; 
+\c intern_jobs; 
+
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE candidates (
@@ -47,6 +50,6 @@ CREATE TABLE applications (
     applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (candidate_id) REFERENCES candidates(id) ON DELETE CASCADE,
     FOREIGN KEY (job_offer_id) REFERENCES job_offers(id) ON DELETE CASCADE,
-    UNIQUE (candidate_id, Job_offer_id)
+    UNIQUE (candidate_id, job_offer_id)
 );
 
