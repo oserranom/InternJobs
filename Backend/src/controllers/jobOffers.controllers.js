@@ -32,7 +32,7 @@ export const getJobOfferById = async (req, res) =>{
 
 
 export const applyToJobOffer = async (req, res) =>{
-    
+
     //verificación de rol
     if(req.role !== "Candidate") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
 
@@ -60,7 +60,7 @@ export const applyToJobOffer = async (req, res) =>{
         //Consulta insert
         const { rows } = await pool.query(
             `INSERT INTO applications (candidate_id, job_offer_id, cover_letter) VALUES ($1, $2, $3) RETURNING*`,
-            [candidateId, job_offer_id, cover_letter]
+            [candidateId, job_offer_id, cover_letter || null]
         );
 
         return res.status(201).json({
