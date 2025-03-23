@@ -4,9 +4,8 @@ import { getJobOffers, getJobOfferById } from "../controllers/jobOffers.controll
 
 const jobOffersRouter = Router();
 
-
+//Public
 jobOffersRouter.get('/', getJobOffers);
-
 jobOffersRouter.get('/:id', getJobOfferById); 
 
 

@@ -175,7 +175,7 @@ export const deleteCompany = async (req, res) =>{
 //PRIVATE JOB OFFERS MANAGEMENT
 export const createJobOffer = async (req, res) =>{
 
-    if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
+    if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción" });
 
     const { title, description, location, salary, education_level, study_field } = req.body; 
 
@@ -206,7 +206,7 @@ export const createJobOffer = async (req, res) =>{
 
 export const getJobOffersByCompany = async (req, res) =>{
 
-    if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
+    if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción" });
 
     try {
        const { rows } = await pool.query(
@@ -222,5 +222,93 @@ export const getJobOffersByCompany = async (req, res) =>{
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const getJobOfferByIdCom = async (req, res) =>{
+
+    if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción" });
+
+    //Extrae id de la url
+    const { id } = req.params;
+
+    try {
+        //Verificación de coincidencia oferta pertenece a empresa logueada
+        const { rows } = await pool.query(
+            "SELECT * FROM job_offers WHERE id = $1 AND company_id = $2",
+            [id, req.id]
+        );
+
+        if(rows.length === 0) return res.status(404).json({ message: "Oferta no encontrada" }); 
+
+        return res.json(rows[0]);
+
+    } catch (error) {
+
+        console.log(error);
+        res.status(500).json({ message: "Interna server error" }); 
+    }
+}
+
+export const updateJobOffer = async (req, res) =>{
+    
+    if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción" });
+
+    const { id } = req.params;
+    const { title, description, location, salary, education_level, study_field } = req.body;
+
+    try {
+        const { rowCount } = await pool.query(
+            "SELECT * FROM job_offers WHERE id = $1 AND company_id = $2",
+            [id, req.id]
+        );
+
+        if (rowCount === 0) return res.status(404).json({ message: "Oferta no encontrada" }); 
+
+        //La oferta pertenece a la empresa logueada pasamos a validaciones
+        if(!title?.trim() || !description?.trim()) return res.status(400).json({ message: "Los campos title y description son requeridos" });
+        if(!salary || isNaN(salary) || salary < 0) return res.status(400).json({ message: "Introduce un sueldo númerico y positivo" }); 
+
+        //La oferta pertenece a la empresa logueada y los datos de esta pasan todas las validaciones: consulta update
+        const { rows } = await pool.query(
+            `UPDATE job_offers SET title = $1, description = $2, location = $3, salary = $4, education_level = $5, study_field = $6
+            WHERE id = $7 RETURNING *`,
+            [title, description, location, salary, education_level, study_field, id]
+        ); 
+
+        return res.json({
+            message: "Oferta actualizada con éxito",
+            job_offer: rows[0]
+        }); 
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" }); 
+    }
+}
+
+export const deleteJobOffer = async (req, res) =>{
+
+    if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción" });
+
+    const { id } = req.params;
+
+    try {
+
+        const { rowCount } = await pool.query(
+            "SELECT id FROM job_offers WHERE id = $1 AND company_id = $2",
+            [id, req.id]
+        );
+
+        if(rowCount === 0) return res.status(404).json({ message: "Oferta no encontrada" }); 
+
+        //Si la oferta pertenece a la empresa sentencia delete
+        await pool.query("DELETE FROM job_offers WHERE id = $1", [id]);
+        return res.status(200).json({ message: "Oferta eliminada con éxito" }); 
+        
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" }); 
     }
 }
