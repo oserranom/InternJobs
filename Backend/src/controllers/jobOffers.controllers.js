@@ -39,7 +39,7 @@ export const applyToJobOffer = async (req, res) =>{
     try {
 
         //Obtención de datos
-        const { job_offer_id } = req.params;
+        const { id: job_id } = req.params;
         const { cover_letter } = req.body; 
         const candidateId = req.id;
 
@@ -47,12 +47,13 @@ export const applyToJobOffer = async (req, res) =>{
         if(!candidateId) return res.status(404).json({ message: "No autorizado" });
 
         //Verificación de job_offer? en la BBBDD
-        const { rows: jobOffer } = await pool.query("SELECT * FROM job_offers WHERE id = $1", [job_offer_id]);
+        const { rows: jobOffer } = await pool.query("SELECT * FROM job_offers WHERE id = $1", [job_id]);
+
         if(jobOffer.length === 0) return res.status(404).json({ message: "La oferta no existe" });
 
         //Verificación de no duplicidad en la aplicación
         const { rows: applications } = await pool.query("SELECT * FROM applications WHERE candidate_id = $1 AND job_offer_id = $2", 
-            [candidateId, job_offer_id]
+            [candidateId, job_id]
         );
 
         if(applications.length > 0) return res.status(400).json({ message: "El candidato ya ha aplicado a esta oferta" });
@@ -60,7 +61,7 @@ export const applyToJobOffer = async (req, res) =>{
         //Consulta insert
         const { rows } = await pool.query(
             `INSERT INTO applications (candidate_id, job_offer_id, cover_letter) VALUES ($1, $2, $3) RETURNING*`,
-            [candidateId, job_offer_id, cover_letter || null]
+            [candidateId, job_id, cover_letter || null]
         );
 
         return res.status(201).json({
