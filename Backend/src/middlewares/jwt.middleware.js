@@ -12,8 +12,6 @@ const verifyToken = (req, res, next) =>{
         const { id, role } = jwt.verify(token, process.env.JWT_SECRET); 
         req.id = id; 
         req.role = role; 
-        console.log(id); 
-        console.log(role); 
         next(); 
     } catch (error) {
         console.log(error); 

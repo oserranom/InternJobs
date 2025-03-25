@@ -312,3 +312,45 @@ export const deleteJobOffer = async (req, res) =>{
         return res.status(500).json({ message: "Internal server error" }); 
     }
 }
+
+
+//PRIVATE APPLICATIONS MANAGEMENT
+export const getApplicationsByCompany = async (req, res) =>{
+
+    if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción" });
+
+    try {
+        //Consulta para traer el resumen de la aplicación, se requiere obtener datos de las tablas
+        //job_offers y candidates a partir de la tabla applications, por eso tiene 2 JOIN. 
+        const { rows } = await pool.query(
+            `SELECT 
+                job_offers.title, 
+                candidates.name, 
+                candidates.email, 
+                applications.applied_at,
+                applications.status
+            FROM applications
+            JOIN job_offers ON applications.job_offer_id = job_offers.id
+            JOIN candidates ON applications.candidate_id = candidates.id
+            WHERE job_offers.company_id = $1
+            ORDER BY applications.applied_at DESC`,
+            [req.id]
+        );
+
+        if(rows.length === 0) return res.status(404).json({ message: "No se han encontrado aplicaciones" }); 
+
+        return res.status(200).json(rows); 
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" }); 
+    }
+}
+
+export const getApplicationById = async (req, res) =>{
+
+}
+
+export const updateApplicaion = async (req, res) =>{
+
+}

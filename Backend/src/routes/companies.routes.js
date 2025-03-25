@@ -1,16 +1,19 @@
 import { Router } from "express";
 import {
-     createCompanie,
-      getCompany, 
-      updateCompany, 
-      deleteCompany, 
-      createJobOffer, 
-      loginCompanie, 
-      getJobOffersByCompany,
-      getJobOfferByIdCom, 
-      deleteJobOffer, 
-      updateJobOffer
-    } from "../controllers/companies.controllers.js";
+  createCompanie,
+  getCompany, 
+  updateCompany, 
+  deleteCompany, 
+  createJobOffer, 
+  loginCompanie, 
+  getJobOffersByCompany,
+  getJobOfferByIdCom, 
+  deleteJobOffer, 
+  updateJobOffer,
+  getApplicationsByCompany,
+  getApplicationById,
+  updateApplicaion
+} from "../controllers/companies.controllers.js";
 import verifyToken from "../middlewares/jwt.middleware.js";
 
 const companiesRouter = Router(); 
@@ -33,5 +36,9 @@ companiesRouter.get('/jobs/:id', verifyToken, getJobOfferByIdCom);
 companiesRouter.put('/jobs/:id', verifyToken, updateJobOffer);  
 companiesRouter.delete('/jobs/:id', verifyToken, deleteJobOffer); 
 
+//Private applications management
+companiesRouter.get('/applications', verifyToken, getApplicationsByCompany);
+companiesRouter.get('/applications/:id', verifyToken, getApplicationById);
+companiesRouter.patch('/applications/:id', verifyToken, updateApplicaion);
 
 export default companiesRouter;

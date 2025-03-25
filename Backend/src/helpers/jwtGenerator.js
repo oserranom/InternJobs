@@ -7,6 +7,6 @@ export const generateJWT = async ({ id, email, role }) =>{
             expiresIn: "24h"
         }
     );
-    console.log(jwt.decode(token)); 
+
     return token; 
 }
