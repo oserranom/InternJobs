@@ -349,6 +349,47 @@ export const getApplicationsByCompany = async (req, res) =>{
 
 export const getApplicationById = async (req, res) =>{
 
+    if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción" });
+
+    try {
+        //Verificación IDs, la job_offer pertenece a la company
+        const ComIdByJwt = req.id; 
+        const appId = req.params.id;
+
+        const { rows: consultaId } = await pool.query(
+            `SELECT job_offers.company_id 
+            FROM applications 
+            JOIN job_offers ON applications.job_offer_id = job_offers.id 
+            WHERE applications.id = $1`,
+            [appId]
+        );
+
+        if(consultaId.length === 0) return res.status(404).json({ message: "No se han encontrado aplicaciones con esta id" });
+
+        const ComIdByUrl = consultaId[0].company_id;
+
+        if(ComIdByUrl !== ComIdByJwt) return res.status(403).json({ message: "Esta oferta no pertenece a la empresa logueada" }); 
+
+        //Consulta para obtener detalle de la aplicación:
+        const { rows: applicationDetails } = await pool.query(
+            `SELECT 
+            candidates.name, candidates.cv, candidates.email, candidates.phone_number,
+            applications.cover_letter, applications.status,
+            job_offers.title
+            FROM applications
+            JOIN candidates ON applications.candidate_id = candidates.id
+            JOIN job_offers ON applications.job_offer_id = job_offers.id
+            WHERE applications.id = $1`,
+            [appId]
+        );
+
+        return res.status(200).json(applicationDetails[0]); 
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" }); 
+    }
+
 }
 
 export const updateApplicaion = async (req, res) =>{
