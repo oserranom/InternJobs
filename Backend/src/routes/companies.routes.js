@@ -12,7 +12,7 @@ import {
   updateJobOffer,
   getApplicationsByCompany,
   getApplicationById,
-  updateApplicaion
+  updateApplication
 } from "../controllers/companies.controllers.js";
 import verifyToken from "../middlewares/jwt.middleware.js";
 
@@ -39,6 +39,6 @@ companiesRouter.delete('/jobs/:id', verifyToken, deleteJobOffer);
 //Private applications management
 companiesRouter.get('/applications', verifyToken, getApplicationsByCompany);
 companiesRouter.get('/applications/:id', verifyToken, getApplicationById);
-companiesRouter.patch('/applications/:id', verifyToken, updateApplicaion);
+companiesRouter.patch('/applications/:id', verifyToken, updateApplication);
 
 export default companiesRouter;

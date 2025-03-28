@@ -354,7 +354,7 @@ export const getApplicationById = async (req, res) =>{
     try {
         //Verificación IDs, la job_offer pertenece a la company
         const ComIdByJwt = req.id; 
-        const appId = req.params.id;
+        const { id: appId } = req.params;
 
         const { rows: consultaId } = await pool.query(
             `SELECT job_offers.company_id 
@@ -392,6 +392,41 @@ export const getApplicationById = async (req, res) =>{
 
 }
 
-export const updateApplicaion = async (req, res) =>{
+export const updateApplication = async (req, res) =>{
 
+    if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esta acción" });
+
+    try {
+        const { status } = req.body;
+
+        //Verificación id == company_id
+        const ComIdByJwt = req.id; 
+        const { id: appId } = req.params;
+
+        const { rows: consultaId } = await pool.query(
+            `SELECT job_offers.company_id 
+            FROM applications 
+            JOIN job_offers ON applications.job_offer_id = job_offers.id 
+            WHERE applications.id = $1`,
+            [appId]
+        );
+
+        if(consultaId.length === 0) return res.status(404).json({ message: "No se han encontrado aplicaciones con esta id" });
+
+        const ComIdByUrl = consultaId[0].company_id;
+        if(ComIdByUrl !== ComIdByJwt) return res.status(403).json({ message: "Esta oferta no pertenece a la empresa logueada" }); 
+        
+        //Status válido:
+        const validStatuses = ["applied", "interview", "rejected", "hired"];
+        if(!validStatuses.includes(status)) return res.status(400).json({ message: "Estado inválido" });
+
+        //Actualizar status:
+        await pool.query("UPDATE applications SET status = $1 WHERE id = $2", [status, appId]);
+        return res.status(200).json({ message: `El estado de la aplicación ha sido actualizado a ${status}` });
+
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" }); 
+    }
 }
