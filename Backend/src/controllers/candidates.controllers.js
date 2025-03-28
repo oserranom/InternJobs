@@ -175,3 +175,14 @@ export const deleteCandidate = async (req, res) =>{
     }
 
 }
+
+export const getApplicationsByCandidate = async (req, res) =>{
+    if(req.role !== "Candidate") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
+    const id = req.id; 
+
+    const { rows } = await pool.query(
+        ``,
+        []
+    ); 
+
+}

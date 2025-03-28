@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCandidate, getCandidate, updateCandidate, deleteCandidate, loginCandidate } from "../controllers/candidates.controllers.js";
+import { createCandidate, getCandidate, updateCandidate, deleteCandidate, loginCandidate, getApplicationsByCandidate } from "../controllers/candidates.controllers.js";
 import verifyToken from "../middlewares/jwt.middleware.js";
 
 const candidatesRouter = Router();
@@ -12,6 +12,7 @@ candidatesRouter.post('/', createCandidate);
 candidatesRouter.get('/profile', verifyToken, getCandidate);
 candidatesRouter.put('/profile', verifyToken, updateCandidate);
 candidatesRouter.delete('/profile', verifyToken, deleteCandidate); 
+candidatesRouter.get('/applications', verifyToken, getApplicationsByCandidate);
 
 
 export default candidatesRouter; 
