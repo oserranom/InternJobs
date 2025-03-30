@@ -178,11 +178,31 @@ export const deleteCandidate = async (req, res) =>{
 
 export const getApplicationsByCandidate = async (req, res) =>{
     if(req.role !== "Candidate") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
-    const id = req.id; 
 
-    const { rows } = await pool.query(
-        ``,
-        []
-    ); 
+    try {
+        const id = req.id; 
+        const { rows } = await pool.query(
+            `SELECT 
+            job_offers.id AS job_offer_id,
+            job_offers.title,
+            companies.name AS company_name,
+            applications.applied_at,
+            applications.status
+            FROM applications
+            JOIN job_offers ON applications.job_offer_id = job_offers.id
+            JOIN companies ON job_offers.company_id = companies.id
+            WHERE applications.candidate_id = $1
+            ORDER BY applications.applied_at DESC;`,
+            [id]
+        ); 
+
+        if(rows.length === 0) return res.status(404).json({ message: "No se encuentran aplicaciones a ofertas" });
+        
+        return res.status(200).json(rows); 
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" }); 
+    }
 
 }

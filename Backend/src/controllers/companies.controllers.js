@@ -329,11 +329,11 @@ export const getApplicationsByCompany = async (req, res) =>{
                 candidates.email, 
                 applications.applied_at,
                 applications.status
-            FROM applications
-            JOIN job_offers ON applications.job_offer_id = job_offers.id
-            JOIN candidates ON applications.candidate_id = candidates.id
-            WHERE job_offers.company_id = $1
-            ORDER BY applications.applied_at DESC`,
+                FROM applications
+                JOIN job_offers ON applications.job_offer_id = job_offers.id
+                JOIN candidates ON applications.candidate_id = candidates.id
+                WHERE job_offers.company_id = $1
+                ORDER BY applications.applied_at DESC`,
             [req.id]
         );
 
@@ -422,7 +422,7 @@ export const updateApplication = async (req, res) =>{
 
         //Actualizar status:
         await pool.query("UPDATE applications SET status = $1 WHERE id = $2", [status, appId]);
-        return res.status(200).json({ message: `El estado de la aplicación ha sido actualizado a ${status}` });
+        return res.status(200).json({ message: `El estado de la aplicación ha sido actualizado a: ${status}` });
 
 
     } catch (error) {
