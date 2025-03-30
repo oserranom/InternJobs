@@ -24,10 +24,66 @@ export const getJobOffers = async (req, res) =>{
 
 
 export const getJobOfferById = async (req, res) =>{
-    const { id } = req.params;
-    const { rows } = await pool.query("SELECT * FROM job_offers WHERE id = $1", [id]); 
-    if(rows.length === 0) return res.status(404).json({ message: "La oferta no ha sido encontrada" }); 
-    return res.status(200).json(rows[0]); 
+    try {
+
+        const { id } = req.params;
+
+        const { rows } = await pool.query(
+            `SELECT job_offers.*, companies.name AS company_name
+            FROM job_offers
+            JOIN companies ON job_offers.company_id = companies.id
+            WHERE job_offers.id = $1`, 
+            [id]
+        ); 
+        if(rows.length === 0) return res.status(404).json({ message: "La oferta no ha sido encontrada" }); 
+        return res.status(200).json(rows[0]); 
+    
+    } catch (error) {
+        
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+
+export const getJobOffersByParams = async (req, res) =>{
+    try {
+        const { location, education_level, study_field } = req.query; //Captura filtros de la url
+
+        let query = `SELECT job_offers.*, companies.name AS company_name
+                    FROM job_offers
+                    JOIN companies ON job_offers.company_id = companies.id
+                    WHERE 1=1`
+        
+        const params = [];
+
+        if(location?.trim()) {
+            params.push(location);
+            query += ` AND job_offers.location = $${params.length}`;
+        }
+
+        if(education_level?.trim()){
+            params.push(education_level);
+            query += ` AND job_offers.education_level = $${params.lenght}`;
+        }
+
+        if(study_field?.trim()){
+            params.push(study_field);
+            query += ` AND job_offers.study_field = $${params.length}`;
+        }
+
+        query += ` ORDER BY job_offers.created_at DESC LIMIT 15`;
+
+        const { rows } = await pool.query(query, params);
+
+        if(rows.lenght === 0) return res.status(404).json({ message: "No se han encontrado ofertas para esos filtros" });
+
+        return res.status(200).json(rows);
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" }); 
+    }
 }
 
 
