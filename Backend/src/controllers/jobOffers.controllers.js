@@ -25,7 +25,7 @@ export const getJobOffers = async (req, res) =>{
 
 export const getJobOfferById = async (req, res) =>{
     try {
-
+        
         const { id } = req.params;
 
         const { rows } = await pool.query(
@@ -39,7 +39,7 @@ export const getJobOfferById = async (req, res) =>{
         return res.status(200).json(rows[0]); 
     
     } catch (error) {
-        
+
         console.log(error);
         return res.status(500).json({ message: "Internal server error" });
     }
@@ -64,7 +64,7 @@ export const getJobOffersByParams = async (req, res) =>{
 
         if(education_level?.trim()){
             params.push(education_level);
-            query += ` AND job_offers.education_level = $${params.lenght}`;
+            query += ` AND job_offers.education_level = $${params.length}`;
         }
 
         if(study_field?.trim()){
@@ -76,7 +76,7 @@ export const getJobOffersByParams = async (req, res) =>{
 
         const { rows } = await pool.query(query, params);
 
-        if(rows.lenght === 0) return res.status(404).json({ message: "No se han encontrado ofertas para esos filtros" });
+        if(rows.length === 0) return res.status(404).json({ message: "No se han encontrado ofertas para esos filtros" });
 
         return res.status(200).json(rows);
 
