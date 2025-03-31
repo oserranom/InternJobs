@@ -2,6 +2,7 @@ import { pool } from "../db.js";
 import { isValidEmail, isValidPhone } from "../helpers/validations.js";
 import { passHash, passMatch } from "../helpers/passwordhash.js";
 import { generateJWT } from "../helpers/jwtGenerator.js";
+import { findCandidateByEmail, findCandidateById, insertNewCandidate } from "../models/Candidate.js";
 
 
 //PUBLIC
@@ -13,14 +14,13 @@ export const loginCandidate = async (req, res) =>{
         //Validación de email y password no sean null o espacios vacíos 
         if(!email?.trim() || !password?.trim()) return res.status(400).json({ error: 'Email y contraseña son requeridos'});
 
-        //Buscar coincidencia candidato por email
-        const { rows } = await pool.query("SELECT * FROM candidates WHERE email = $1", [email]); 
+        //LLamada al moodel
+        const candidate = await findCandidateByEmail(email);
 
         //res 404 en caso de no encontrar candidate
-        if(rows.length === 0) return res.status(404).json({ error: `El candidato con email '${email}' no existe`}); 
+        if(!candidate) return res.status(404).json({ error: `El candidato con email '${email}' no existe`}); 
 
-        //Comprobar contraseña
-        const candidate = rows[0]; 
+        //Comprobar contraseña 
         const match = await passMatch(password, candidate.password); 
         if (!match) return res.status(401).json({ error: 'Password incorrecto' });
 
@@ -39,7 +39,7 @@ export const loginCandidate = async (req, res) =>{
         }); 
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ error: 'Internal server error'}); 
     }
 }
@@ -68,21 +68,19 @@ export const createCandidate = async (req, res) =>{
         //Hash de password
         const hashedPassword = await passHash(password); 
 
-        //Consulta insert
-        const {rows} = await pool.query(
-            "INSERT INTO candidates (name, email, password, cv, phone_number) VALUES ($1, $2, $3, $4, $5) RETURNING name, email",
-            [name, email, hashedPassword, cv || null, phone_number]
-        );
+        //LLamada al model
+        const candidate = await insertNewCandidate(name, email, hashedPassword, cv, phone_number);
+        
         return res.status(201).json({
             message: "Candidato registrado",
             candidate: {
-                name: rows[0].name,
-                email: rows[0].email
+                name: candidate.name,
+                email: candidate.email
             }
         }); 
         
     } catch (error) {
-        console.log(error); 
+        console.error(error); 
         //Separamos el error 23505 de postgres para devolver email ya registrado en la BBDD
         if(error?.code === '23505') return res.status(409).json({message: 'Este email ya está registrado'});
         return res.status(500).json({message: 'Internal server error'}); 
@@ -99,20 +97,19 @@ export const getCandidate = async (req, res) =>{
     try {
         //Consulta por id, si no devuelve 1 row el candidato no existe 
         //La id ha sido enviada a la req. desde el middleware
-        const { rows } = await pool.query("SELECT name, email, phone_number, cv FROM candidates WHERE id = $1", [req.id]);
+        const candidate = await findCandidateById(req.id); 
 
-        if(rows.length === 0) return res.status(404).json({ message: "El candidato no existe" }); 
+        if(!candidate) return res.status(404).json({ message: "El candidato no existe" }); 
 
         res.status(200).json({
             message: "Candidato obtenido",
-            candidate: rows[0]
+            candidate
         });
 
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Internal server error" }); 
     }
-
 }
 
 
