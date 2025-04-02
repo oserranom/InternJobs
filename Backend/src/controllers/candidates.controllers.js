@@ -2,7 +2,14 @@ import { pool } from "../db.js";
 import { isValidEmail, isValidPhone } from "../helpers/validations.js";
 import { passHash, passMatch } from "../helpers/passwordhash.js";
 import { generateJWT } from "../helpers/jwtGenerator.js";
-import { findCandidateByEmail, findCandidateById, insertNewCandidate } from "../models/Candidate.js";
+import { 
+    deleteCandidateModel,
+    findApplicationsByCandidate,
+    findCandidateByEmail, 
+    findCandidateById, 
+    insertNewCandidate, 
+    updateCandidateModel 
+} from "../models/Candidate.js";
 
 
 //PUBLIC
@@ -95,7 +102,7 @@ export const getCandidate = async (req, res) =>{
     if(req.role !== "Candidate") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
 
     try {
-        //Consulta por id, si no devuelve 1 row el candidato no existe 
+        //LLamada al model
         //La id ha sido enviada a la req. desde el middleware
         const candidate = await findCandidateById(req.id); 
 
@@ -126,21 +133,18 @@ export const updateCandidate = async (req, res) =>{
         if(!isValidEmail(email)) return res.status(400).json({ message: "El email introducido no es válido" });
         if(!isValidPhone(phone_number)) return res.status(400).json({ message: "El tlf introducido no es válido" });
 
-        //Consulta update de los 4 parámetros susceptibles de cambio pasando el id como referencia
-        const { rows } = await pool.query(
-            "UPDATE candidates SET name = $1, email = $2, phone_number = $3, cv = $4 WHERE id = $5 RETURNING *",
-            [name, email, phone_number, cv, req.id]
-        );
+        //LLamada al model 
+        const candidate = await updateCandidateModel(name, email, phone_number, cv, req.id);
 
-        if(rows.length === 0) return res.status(404).json({ message: "El candidato no existe" }); 
+        if(!candidate) return res.status(404).json({ message: "El candidato no existe" }); 
 
         return res.json({ 
             message: "Los datos han sido actualizados",
             candidate: {
-                name: rows[0].name,
-                email: rows[0].email,
-                phone_number: rows[0].phone_number,
-                cv: rows[0].cv,
+                name: candidate.name,
+                email: candidate.email,
+                phone_number: candidate.phone_number,
+                cv: candidate.cv,
             }
         }); 
 
@@ -158,11 +162,9 @@ export const deleteCandidate = async (req, res) =>{
     if(req.role !== "Candidate") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
 
     try {
-        //Consulta candidato por id, usamos rowCount porque con DELETE row.length siempre devuelve 0
-        const { rowCount } = await pool.query('DELETE FROM candidates WHERE id = $1', [req.id]);
-
-        if(rowCount === 0) return res.status(404).json({ message: 'EL candidato no existe'});
-
+        //llamada al model
+        const deleted = await deleteCandidateModel(req.id);
+        if(deleted === 0) return res.status(404).json({ message: 'EL candidato no existe'});
         return res.status(200).json({ message: 'Candidato eliminado'}); 
 
     } catch (error) {
@@ -177,23 +179,8 @@ export const getApplicationsByCandidate = async (req, res) =>{
     if(req.role !== "Candidate") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
 
     try {
-        const id = req.id; 
-        const { rows } = await pool.query(
-            `SELECT 
-            job_offers.id AS job_offer_id,
-            job_offers.title,
-            companies.name AS company_name,
-            applications.applied_at,
-            applications.status
-            FROM applications
-            JOIN job_offers ON applications.job_offer_id = job_offers.id
-            JOIN companies ON job_offers.company_id = companies.id
-            WHERE applications.candidate_id = $1
-            ORDER BY applications.applied_at DESC;`,
-            [id]
-        ); 
-
-        if(rows.length === 0) return res.status(404).json({ message: "No se encuentran aplicaciones a ofertas" });
+        const applications = await findApplicationsByCandidate(req.id);
+        if(!applications) return res.status(404).json({ message: "No se encuentran aplicaciones a ofertas" });
         
         return res.status(200).json(rows); 
 
