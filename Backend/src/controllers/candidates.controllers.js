@@ -1,4 +1,3 @@
-import { pool } from "../db.js";
 import { isValidEmail, isValidPhone } from "../helpers/validations.js";
 import { passHash, passMatch } from "../helpers/passwordhash.js";
 import { generateJWT } from "../helpers/jwtGenerator.js";

@@ -2,6 +2,7 @@ import { pool } from "../db.js";
 import { generateJWT } from "../helpers/jwtGenerator.js";
 import { isValidEmail } from "../helpers/validations.js";
 import { passHash, passMatch } from "../helpers/passwordhash.js";
+import { findCompanyByEmail, insertNewCompany } from "../models/Company.js";
 
 //PUBLIC
 export const createCompanie = async (req, res) =>{
@@ -23,17 +24,14 @@ export const createCompanie = async (req, res) =>{
         //Hash de password
         const hashedPassword = await passHash(password); 
 
-        //Consulta insert
-        const { rows } = await pool.query(
-            'INSERT INTO companies (name, email, password, industry, description, company_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING name, email',
-            [name, email, hashedPassword, industry, description, company_url]
-        );
-        
+        //LLamada a model
+        const company = await insertNewCompany(name, email, hashedPassword, industry, description, company_url);
+
         return res.status(201).json({
             message: "Empresa registrada con éxito",
-            companie: {
-                name: rows[0].name,
-                email: rows[0].email
+            company: {
+                name: company.name,
+                email: company.email
             }
         }); 
 
@@ -46,34 +44,33 @@ export const createCompanie = async (req, res) =>{
     }
 }
 
+
 export const loginCompanie = async (req, res) =>{
     try {
         const { email, password } = req.body;
         //Validación de campos
         if(!email?.trim() || !password?.trim()) return res.status(400).json({ message: "Email y password son campos requeridos"});
 
-        //Sentencia buscar coincidencia por email
-        const { rows } = await pool.query("SELECT * FROM companies WHERE email = $1", [email]);
+        //llamada a model
+        const company = await findCompanyByEmail(email);
 
         //Validar si la companie existe en la BBDD
-        if(rows.length === 0) return res.status(404).json({message: `La empresa con email: ${email} no existe`});
+        if(!company) return res.status(404).json({message: `La empresa con email: ${email} no existe`});
 
         //Validación de coincidencia de passwords
-        const companie = rows[0];
-        const match = await passMatch(password, companie.password); 
+        const match = await passMatch(password, company.password); 
         if(!match) return res.status(401).json({ message: "Password incorrecto" }); 
 
-        //Generar JWT para sesión
-        const token = await generateJWT({ id: companie.id, email: companie.email, role: "Company" });
-        
+        //Generar JWT para sesióncompany
+        const token = await generateJWT({ id: company.id, email: company.email, role: "Company" });
 
         //Validaciones OK, Password coincide:
         res.status(200).json({
             message: "Login correcto",
-            companie: {
-                id: companie.id,
-                name: companie.name,
-                email: companie.email,
+            company: {
+                id: company.id,
+                name: company.name,
+                email: company.email,
                 token 
             }
         });
