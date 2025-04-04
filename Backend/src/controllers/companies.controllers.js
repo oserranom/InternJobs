@@ -2,7 +2,11 @@ import { pool } from "../db.js";
 import { generateJWT } from "../helpers/jwtGenerator.js";
 import { isValidEmail } from "../helpers/validations.js";
 import { passHash, passMatch } from "../helpers/passwordhash.js";
-import { findCompanyByEmail, insertNewCompany } from "../models/Company.js";
+import { 
+    findCompanyByEmail, 
+    findCompanyById, 
+    insertNewCompany, 
+} from "../models/Company.js";
 
 //PUBLIC
 export const createCompanie = async (req, res) =>{
@@ -88,9 +92,8 @@ export const getCompany = async (req, res) =>{
     if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "}); 
 
     try {
-        const { rows } = await pool.query("SELECT * FROM companies WHERE id = $1", [req.id]);
-        if(rows.length === 0) return res.status(404).json({ message: "La empresa no existe" }); 
-        const company = rows[0]; 
+        const company = await findCompanyById(req.id);
+        if(!company) return res.status(404).json({ message: "La empresa no existe" }); 
 
         return res.status(200).json({
             message: "Empresa identificada",
