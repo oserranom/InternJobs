@@ -16,3 +16,8 @@ export const findCompanyByEmail = async (email) =>{
 }
 
 
+export const findCompanyById = async (id) =>{
+    const { rows } = await pool.query("SELECT * FROM companies WHERE id = $1", [id]);
+    return rows[0]; 
+}
+
