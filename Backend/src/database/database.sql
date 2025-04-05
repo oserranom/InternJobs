@@ -36,7 +36,6 @@ CREATE TABLE job_offers (
     study_field VARCHAR(50),
     salary DECIMAL(10,2),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    application_count INTEGER DEFAULT 0,
     FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
 );
 

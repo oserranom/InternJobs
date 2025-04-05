@@ -52,7 +52,10 @@ export const findJobOffersByCompany = async (id)=>{
         `SELECT 
         job_offers.id, 
         job_offers.title,
+        job_offers.description,
         job_offers.location, 
+        job_offers.study_field,
+        job_offers.education_level,
         job_offers.created_at, 
         companies.name AS company_name
         FROM job_offers 
