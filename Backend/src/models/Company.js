@@ -47,20 +47,32 @@ export const insertNewJobOffer = async (id, title, description, location, salary
 }
 
 export const findJobOffersByCompany = async (id)=>{
-    //Consulta para obtener las ofertas creadas por la empresa
+    //Consulta para obtener las ofertas creadas por la empresa a partir de su id
+    //Además se realiza un conteo al vuelo de las aplicaciones recibidas en cada job_offer y se agrupan
     const { rows } = await pool.query(
         `SELECT 
-        job_offers.id, 
-        job_offers.title,
-        job_offers.description,
-        job_offers.location, 
-        job_offers.study_field,
-        job_offers.education_level,
-        job_offers.created_at, 
-        companies.name AS company_name
+            job_offers.id, 
+            job_offers.title,
+            job_offers.description,
+            job_offers.location, 
+            job_offers.study_field,
+            job_offers.education_level,
+            job_offers.created_at, 
+            companies.name AS company_name,
+            COUNT (applications.id) AS application_count
         FROM job_offers 
         JOIN companies ON job_offers.company_id = companies.id 
-        WHERE job_offers.company_id = $1`,
+        LEFT JOIN applications ON job_offers.id = applications.job_offer_id
+        WHERE job_offers.company_id = $1
+        GROUP BY 
+            job_offers.id,
+            job_offers.title,
+            job_offers.description,
+            job_offers.location,
+            job_offers.study_field,
+            job_offers.education_level,
+            job_offers.created_at,
+            companies.name`,
         [id]
     ); 
     return rows; 
