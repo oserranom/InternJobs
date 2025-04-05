@@ -3,9 +3,13 @@ import { generateJWT } from "../helpers/jwtGenerator.js";
 import { isValidEmail } from "../helpers/validations.js";
 import { passHash, passMatch } from "../helpers/passwordhash.js";
 import { 
+    deleteCompanyModel,
     findCompanyByEmail, 
     findCompanyById, 
-    insertNewCompany, 
+    findJobOffersByCompany, 
+    insertNewCompany,
+    insertNewJobOffer,
+    updateCompanyModel, 
 } from "../models/Company.js";
 
 //PUBLIC
@@ -129,22 +133,18 @@ export const updateCompany = async (req, res) =>{
 
         if(!isValidEmail(email)) return res.status(400).json({ message: "El email introducido no es válido" }); 
 
-        //Validación OK, consulta update.
-        const { rows } = await pool.query(
-            "UPDATE companies SET name = $1, email = $2, description = $3, company_url = $4 WHERE id = $5 RETURNING*",
-            [name, email, description, company_url, req.id]
-        );
-
-        if(rows.length === 0) return res.status(404).json({ message: "La empresa no existe" });
+        //LLamda a model
+        const company = await updateCompanyModel(name, email, description, company_url, req.id);
+        if(!company) return res.status(404).json({ message: "La empresa no existe" });
         
         //Respuesta
         return res.json({
             message: "Los datos han sido actualizados",
             companie: {
-                name: rows[0].name,
-                email: rows[0].email,
-                description: rows[0].description,
-                company_url: rows[0].company_url
+                name: company.name,
+                email: company.email,
+                description: company.description,
+                company_url: company.company_url
             }
         });
 
@@ -155,14 +155,14 @@ export const updateCompany = async (req, res) =>{
     }
 }
 
+
 export const deleteCompany = async (req, res) =>{
 
     if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción "});
     
     try {
-        //Consulta empresa por id, usamos rowCount porque con DELETE row.length siempre devuelve 0
-        const { rowCount } = await pool.query("DELETE FROM companies WHERE id = $1", [req.id]);
-        if(rowCount === 0) return res.status(404).json({ message: "La empresa no existe" });
+        const result = await deleteCompanyModel(req.id);
+        if(result === 0) return res.status(404).json({ message: "La empresa no existe" });
         return res.status(200).json({ message: "La empresa ha sido eliminada con éxito" }); 
 
     } catch (error) {
@@ -184,17 +184,13 @@ export const createJobOffer = async (req, res) =>{
         if(!title?.trim() || !description?.trim()) return res.status(400).json({ message: "Los campos title y description son requeridos" });
         if(!salary || isNaN(salary) || salary < 0) return res.status(400).json({ message: "Introduce un sueldo númerico y positivo" }); 
         
-        //Validación OK e ID válido
-        const { rows } = await pool.query(
-            `INSERT INTO job_offers (company_id, title, description, location, salary, education_level, study_field) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-            [req.id, title, description, location, salary, education_level, study_field]
-        );
-        
+        //Validación OK e ID válido, llamada a model:
+        const jobOffer = await insertNewJobOffer(req.id, title, description, location, salary, education_level, study_field);
+
         //Respuestas
         return res.status(201).json({
             message: "La oferta ha sido creada con éxito",
-            job_offer: rows[0]
+            jobOffer
         });
 
     } catch (error) {
@@ -209,21 +205,17 @@ export const getJobOffersByCompany = async (req, res) =>{
     if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción" });
 
     try {
-       const { rows } = await pool.query(
-        `SELECT job_offers.*, companies.name AS company_name FROM job_offers 
-        JOIN companies ON job_offers.company_id = companies.id WHERE job_offers.company_id = $1`,
-        [req.id]
-       ); 
-
-        if(rows.length === 0) return res.status(404).json({ message: "Esta empresa aún no ha publicado ofertas" }); 
-
-        return res.json(rows); 
+        //Lamada al model
+        const jobOffers = await findJobOffersByCompany(req.id);
+        if(jobOffers.length === 0) return res.status(404).json({ message: "Esta empresa aún no ha publicado ofertas" }); 
+        return res.json(jobOffers); 
 
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Internal server error" });
     }
 }
+
 
 export const getJobOfferByIdCom = async (req, res) =>{
 
@@ -249,6 +241,7 @@ export const getJobOfferByIdCom = async (req, res) =>{
         res.status(500).json({ message: "Interna server error" }); 
     }
 }
+
 
 export const updateJobOffer = async (req, res) =>{
     
@@ -286,6 +279,7 @@ export const updateJobOffer = async (req, res) =>{
         return res.status(500).json({ message: "Internal server error" }); 
     }
 }
+
 
 export const deleteJobOffer = async (req, res) =>{
 
