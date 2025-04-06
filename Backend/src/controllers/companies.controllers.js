@@ -14,6 +14,7 @@ import {
     findJobOffersByCompany, 
     insertNewCompany,
     insertNewJobOffer,
+    updateApplicationStatus,
     updateCompanyModel,
     updateJobOfferModel, 
 } from "../models/Company.js";
@@ -345,29 +346,21 @@ export const updateApplication = async (req, res) =>{
 
         //Verificación id == company_id
         const ComIdByJwt = req.id; 
-        const { id: appId } = req.params;
+        const { id } = req.params;
 
-        const { rows: consultaId } = await pool.query(
-            `SELECT job_offers.company_id 
-            FROM applications 
-            JOIN job_offers ON applications.job_offer_id = job_offers.id 
-            WHERE applications.id = $1`,
-            [appId]
-        );
-
-        if(consultaId.length === 0) return res.status(404).json({ message: "No se han encontrado aplicaciones con esta id" });
-
-        const ComIdByUrl = consultaId[0].company_id;
-        if(ComIdByUrl !== ComIdByJwt) return res.status(403).json({ message: "Esta oferta no pertenece a la empresa logueada" }); 
+        //Model verificación ids
+        const consultaId = await ApplicationCompanyMatch(id);
+        if(!consultaId) return res.status(404).json({ message: "No se han encontrado aplicaciones con esta id" });
+        const ComIdByUrl = consultaId.company_id;
+        if(ComIdByUrl !== ComIdByJwt) return res.status(403).json({ message: "Esta oferta no pertenece a la empresa logueada" });
         
         //Status válido:
         const validStatuses = ["applied", "interview", "rejected", "hired"];
         if(!validStatuses.includes(status)) return res.status(400).json({ message: "Estado inválido" });
 
         //Actualizar status:
-        await pool.query("UPDATE applications SET status = $1 WHERE id = $2", [status, appId]);
-        return res.status(200).json({ message: `El estado de la aplicación ha sido actualizado a: ${status}` });
-
+        const updatedStatus = await updateApplicationStatus(status, id);
+        return res.status(200).json({ message: `El estado de la aplicación ha sido actualizado a: ${updatedStatus}` });
 
     } catch (error) {
         console.log(error);

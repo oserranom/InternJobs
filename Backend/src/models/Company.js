@@ -150,3 +150,8 @@ export const findApplicationById = async (id)=>{
     );
     return rows[0];
 }
+
+export const updateApplicationStatus = async (status, id) =>{
+    await pool.query("UPDATE applications SET status = $1 WHERE id = $2", [status, id]);
+    return status; 
+}
