@@ -77,3 +77,26 @@ export const findJobOffersByCompany = async (id)=>{
     ); 
     return rows; 
 }
+
+export const findJobOfferByIdCom = async (jobOffer_id, company_id)=>{
+    //Obtención de job_offer by id con match a company_id
+    const { rows } = await pool.query(
+        "SELECT * FROM job_offers WHERE id = $1 AND company_id = $2",
+        [jobOffer_id, company_id]
+    );
+    return rows[0]; 
+}
+
+export const updateJobOfferModel = async(title, description, location, salary, education_level, study_field, id)=>{
+    //Consulta update job_offer
+    const { rows } = await pool.query(
+        `UPDATE job_offers SET title = $1, description = $2, location = $3, salary = $4, education_level = $5, study_field = $6
+        WHERE id = $7 RETURNING *`,
+        [title, description, location, salary, education_level, study_field, id]
+    ); 
+    return rows[0]; 
+}
+
+export const deleteJobOfferModel = async(id)=>{
+    await pool.query("DELETE FROM job_offers WHERE id = $1", [id]);
+}
