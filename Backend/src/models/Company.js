@@ -100,3 +100,53 @@ export const updateJobOfferModel = async(title, description, location, salary, e
 export const deleteJobOfferModel = async(id)=>{
     await pool.query("DELETE FROM job_offers WHERE id = $1", [id]);
 }
+
+export const findApplicationsByCompany = async (id) =>{
+    //Consulta para traer el resumen de la aplicación, se requiere obtener datos de las tablas
+    //job_offers y candidates a partir de la tabla applications, por eso tiene 2 JOIN. 
+    const { rows } = await pool.query(
+        `SELECT 
+            job_offers.title, 
+            candidates.name, 
+            candidates.email, 
+            applications.applied_at,
+            applications.status
+            FROM applications
+            JOIN job_offers ON applications.job_offer_id = job_offers.id
+            JOIN candidates ON applications.candidate_id = candidates.id
+            WHERE job_offers.company_id = $1
+            ORDER BY applications.applied_at DESC`,
+        [id]
+    );
+
+    return rows; 
+}
+
+
+export const ApplicationCompanyMatch = async (id)=>{
+    //consulta verificación id == company_id
+    const { rows } = await pool.query(
+        `SELECT job_offers.company_id 
+        FROM applications 
+        JOIN job_offers ON applications.job_offer_id = job_offers.id 
+        WHERE applications.id = $1`,
+        [id]
+    );
+    return rows[0]; 
+}
+
+export const findApplicationById = async (id)=>{
+    //Consulta para obtener detalle de la aplicación:
+    const { rows } = await pool.query(
+        `SELECT 
+        candidates.name, candidates.cv, candidates.email, candidates.phone_number,
+        applications.cover_letter, applications.status,
+        job_offers.title
+        FROM applications
+        JOIN candidates ON applications.candidate_id = candidates.id
+        JOIN job_offers ON applications.job_offer_id = job_offers.id
+        WHERE applications.id = $1`,
+        [id]
+    );
+    return rows[0];
+}

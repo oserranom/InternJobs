@@ -3,8 +3,11 @@ import { generateJWT } from "../helpers/jwtGenerator.js";
 import { isValidEmail } from "../helpers/validations.js";
 import { passHash, passMatch } from "../helpers/passwordhash.js";
 import { 
+    ApplicationCompanyMatch,
     deleteCompanyModel,
     deleteJobOfferModel,
+    findApplicationById,
+    findApplicationsByCompany,
     findCompanyByEmail, 
     findCompanyById, 
     findJobOfferByIdCom, 
@@ -294,30 +297,12 @@ export const deleteJobOffer = async (req, res) =>{
 
 //PRIVATE APPLICATIONS MANAGEMENT
 export const getApplicationsByCompany = async (req, res) =>{
-
     if(req.role !== "Company") return res.status(403).json({ message: "No tienes permisos para realizar esa acción" });
 
     try {
-        //Consulta para traer el resumen de la aplicación, se requiere obtener datos de las tablas
-        //job_offers y candidates a partir de la tabla applications, por eso tiene 2 JOIN. 
-        const { rows } = await pool.query(
-            `SELECT 
-                job_offers.title, 
-                candidates.name, 
-                candidates.email, 
-                applications.applied_at,
-                applications.status
-                FROM applications
-                JOIN job_offers ON applications.job_offer_id = job_offers.id
-                JOIN candidates ON applications.candidate_id = candidates.id
-                WHERE job_offers.company_id = $1
-                ORDER BY applications.applied_at DESC`,
-            [req.id]
-        );
-
-        if(rows.length === 0) return res.status(404).json({ message: "No se han encontrado aplicaciones" }); 
-
-        return res.status(200).json(rows); 
+        const applications = await findApplicationsByCompany(req.id);
+        if(!applications) return res.status(404).json({ message: "No se han encontrado aplicaciones" }); 
+        return res.status(200).json(applications); 
 
     } catch (error) {
         console.log(error);
@@ -332,36 +317,17 @@ export const getApplicationById = async (req, res) =>{
     try {
         //Verificación IDs, la job_offer pertenece a la company
         const ComIdByJwt = req.id; 
-        const { id: appId } = req.params;
+        const { id } = req.params;
 
-        const { rows: consultaId } = await pool.query(
-            `SELECT job_offers.company_id 
-            FROM applications 
-            JOIN job_offers ON applications.job_offer_id = job_offers.id 
-            WHERE applications.id = $1`,
-            [appId]
-        );
-
-        if(consultaId.length === 0) return res.status(404).json({ message: "No se han encontrado aplicaciones con esta id" });
-
-        const ComIdByUrl = consultaId[0].company_id;
-
+        //Model verificación ids
+        const consultaId = await ApplicationCompanyMatch(id);
+        if(!consultaId) return res.status(404).json({ message: "No se han encontrado aplicaciones con esta id" });
+        const ComIdByUrl = consultaId.company_id;
         if(ComIdByUrl !== ComIdByJwt) return res.status(403).json({ message: "Esta oferta no pertenece a la empresa logueada" }); 
 
-        //Consulta para obtener detalle de la aplicación:
-        const { rows: applicationDetails } = await pool.query(
-            `SELECT 
-            candidates.name, candidates.cv, candidates.email, candidates.phone_number,
-            applications.cover_letter, applications.status,
-            job_offers.title
-            FROM applications
-            JOIN candidates ON applications.candidate_id = candidates.id
-            JOIN job_offers ON applications.job_offer_id = job_offers.id
-            WHERE applications.id = $1`,
-            [appId]
-        );
-
-        return res.status(200).json(applicationDetails[0]); 
+        //Pasa verificación: model
+        const application = await findApplicationById(id);
+        return res.status(200).json(application); 
 
     } catch (error) {
         console.log(error);
