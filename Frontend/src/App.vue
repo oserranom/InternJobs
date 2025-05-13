@@ -4,7 +4,10 @@
 
 <template>
   <div>
-    <div></div>
+    <div>
+
+    </div>
+    
     <div>
       <RouterView />
     </div>
