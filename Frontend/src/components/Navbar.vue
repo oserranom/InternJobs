@@ -16,10 +16,22 @@ import { RouterLink } from 'vue-router';
                 
 
             <div class="md:flex justify-between">
-                <RouterLink class="mx-5">Acceso Empresas</RouterLink>
-                <RouterLink class="mx-5">Acceso Candidatos</RouterLink>
-                <RouterLink class="mx-5">Regístrate</RouterLink>
+        
+                <div class="group hover:bg-gray-50 mx-5 py-2 px-3 rounded-lg font-bold text-sm transition">
+                    <RouterLink class=" text-gray-50 font-bold text-sm group-hover:text-gray-800">Acceso Empresas</RouterLink>
+                </div>
+
+                <div class="group hover:bg-gray-50 mx-5 py-2 px-3 rounded-lg font-bold text-sm transition" >
+                    <RouterLink class="text-gray-50 font-bold text-sm group-hover:text-gray-800">Acceso Candidatos</RouterLink>
+                </div>
+
+                <div class="bg-emerald-300 mx-5 py-2 px-3 rounded-lg font-bold text-sm hover:bg-emerald-500 transition">
+                    <RouterLink class=" text-gray-800">Regístrate</RouterLink>
+                </div>
+                
             </div>
+
+
         </div>
     </nav>
 </template>
