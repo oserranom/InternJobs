@@ -5,29 +5,43 @@ import { RouterLink } from 'vue-router';
 </script>
 
 <template>
-    <nav>
-        <div class="md:flex justify-between px-10 py-5 items-center">
+    <nav class="shadow-[0_4px_6px_-2px_rgba(16,185,129,0.5)]">
+        <div class="md:flex justify-between px-15 py-5 items-center">
 
             <RouterLink
+                class="text-3xl font-serif font-bold text-gray-50 hover:text-emerald-400 transition duration-300 ease-in-out"
                 :to="{name: 'home'}"
             >
-                <img src="/Logo/ijlogo.svg" alt="Tu logo" class="h-20 w-auto" />
+                Intern<span class="font-sans font-extrabold text-emerald-400">JOBS</span>
             </RouterLink>
                 
 
             <div class="md:flex justify-between">
         
-                <div class="group hover:bg-gray-50 mx-5 py-2 px-3 rounded-lg font-bold text-sm transition">
-                    <RouterLink class=" text-gray-50 font-bold text-sm group-hover:text-gray-800">Acceso Empresas</RouterLink>
-                </div>
+               
+                <RouterLink 
+                    class="text-gray-50 text-lg hover:text-gray-800 mx-2 hover:bg-gray-50 transition duration-300 ease-in-out
+                            py-1 px-3 rounded-lg font-semibold"
+                >
+                    Acceso Empresas
+                </RouterLink>
+            
+                <RouterLink 
+                    class="text-gray-50 text-lg hover:text-gray-800 mx-2 hover:bg-gray-50 transition duration-300 ease-in-out
+                            py-1 px-3 rounded-lg font-semibold"
+                >
+                    Acceso Candidatos
+                </RouterLink>
+            
 
-                <div class="group hover:bg-gray-50 mx-5 py-2 px-3 rounded-lg font-bold text-sm transition" >
-                    <RouterLink class="text-gray-50 font-bold text-sm group-hover:text-gray-800">Acceso Candidatos</RouterLink>
-                </div>
-
-                <div class="bg-emerald-300 mx-5 py-2 px-3 rounded-lg font-bold text-sm hover:bg-emerald-500 transition">
-                    <RouterLink class=" text-gray-800">Regístrate</RouterLink>
-                </div>
+            
+                <RouterLink 
+                    class="text-lg font-bold text-gray-800 bg-emerald-400 mx-2 rounded-lg py-1 px-3 
+                        hover:shadow-[0_8px_25px_rgba(16,185,129,0.5)] hover:bg-emerald-300 transition duration-300 ease-in-out"
+                >
+                    Regístrate
+                </RouterLink>
+                
                 
             </div>
 
