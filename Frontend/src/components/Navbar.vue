@@ -5,7 +5,7 @@ import { RouterLink } from 'vue-router';
 </script>
 
 <template>
-    <nav class="shadow-[0_4px_6px_-2px_rgba(16,185,129,0.5)]">
+    <nav class="sticky top-0 z-10 shadow-[0_4px_6px_-2px_rgba(16,185,129,0.5)]">
         <div class="md:flex justify-between px-15 py-5 items-center">
 
             <RouterLink
@@ -33,15 +33,12 @@ import { RouterLink } from 'vue-router';
                     Acceso Candidatos
                 </RouterLink>
             
-
-            
                 <RouterLink 
                     class="text-lg font-bold text-gray-800 bg-emerald-400 mx-2 rounded-lg py-1 px-3 
                         hover:shadow-[0_8px_25px_rgba(16,185,129,0.5)] hover:bg-emerald-300 transition duration-300 ease-in-out"
                 >
                     Regístrate
                 </RouterLink>
-                
                 
             </div>
 
