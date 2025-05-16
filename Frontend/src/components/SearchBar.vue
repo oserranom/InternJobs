@@ -48,7 +48,7 @@ function handleSubmit() {
         <option value="sanidad">Sanidad</option>
         <option value="quimica">Química</option>
         <option value="electricidad">Eelectricidad</option>
-        
+
       </select>
 
       <!-- Select Nivel de estudios -->
@@ -57,8 +57,8 @@ function handleSubmit() {
         class="w-full md:flex-1 p-2 rounded-lg bg-gray-100 text-gray-800"
       >
         <option disabled value="">Nivel de estudios</option>
-        <option value="CFGM">Grado</option>
-        <option value="CFGS">Máster</option>
+        <option value="CFGM">CFGM</option>
+        <option value="CFGS">CFGS</option>
       </select>
 
       <button
