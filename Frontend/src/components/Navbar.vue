@@ -5,7 +5,7 @@ import { RouterLink } from 'vue-router';
 </script>
 
 <template>
-    <nav class="sticky top-0 z-10 shadow-[0_4px_6px_-2px_rgba(16,185,129,0.5)]">
+    <nav class="bg-gray-800 sticky top-0 z-10 shadow-[0_4px_6px_-2px_rgba(16,185,129,0.5)]">
         <div class="md:flex justify-between px-15 py-5 items-center">
 
             <RouterLink

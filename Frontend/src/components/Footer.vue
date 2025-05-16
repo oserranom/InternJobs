@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <footer class="h-40 bg-gradient-to-t from-gray-100 to-gray-300/80 flex justify-around border-t border-white/20">
+    <footer class="h-40 bg-gradient-to-t from-gray-100 to-gray-300/80 flex justify-around items-center border-t border-white/20">
         <div class="text-gray-800 py-10 px-20 text-lg">
             <h3 class="text-center">
                 <a 
