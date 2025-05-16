@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+  import SearchBar from '@/components/SearchBar.vue'
+</script>
 
 <template>
   <div
@@ -9,9 +11,7 @@
       Portal de ofertas para prácticas laborales
     </h1>
 
-    <div class="absolute w-2/3 text-center bg-gray-800/20">
-      
-    </div>
+    <SearchBar />
 
   </div>
 
