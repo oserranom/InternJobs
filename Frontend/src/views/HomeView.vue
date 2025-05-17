@@ -7,11 +7,11 @@
     class="relative w-full h-[250px] md:h-[400px] bg-[url('/img/office.webp')] bg-cover bg-center md:bg-[center_bottom_40%] 
           bg-no-repeat flex items-center justify-center"
   >
-    <h1 class="absolute top-5 text-4xl font-semibold text-gray-900 text-center drop-shadow-lg">
-      Portal de ofertas para prácticas laborales
+    <h1 class="absolute top-5 text-4xl font-semibold text-gray-900 bg-gray-50/40 text-center drop-shadow-lg px-2 rounded">
+      Portal de ofertas de prácticas laborales
     </h1>
 
-    <SearchBar />
+    <SearchBar class="absolute w-full md:w-2/3" />
 
   </div>
 
@@ -23,9 +23,9 @@
       Encuentra prácticas profesionales y formaliza tu experiencia.
     </p>
 
-    <div class="flex items-center mt-15 gap-5">
+    <div class="md:flex md:items-center mt-15 gap-5">
 
-      <div class="flex flex-col items-center flex-1 rounded-lg p-6 text-gray-200 bg-gray-900" > 
+      <div class="flex flex-col items-center flex-1 rounded-lg p-6 my-1 text-gray-200 bg-gray-900" > 
         <svg  xmlns="http://www.w3.org/2000/svg"  width="46"  height="46"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  
           class="icon icon-tabler icons-tabler-outline icon-tabler-search text-center"
         >
@@ -39,7 +39,7 @@
 
       </div>
 
-      <div class="flex flex-col items-center flex-1 rounded-lg p-6 text-gray-200 bg-gray-900" > 
+      <div class="flex flex-col items-center flex-1 rounded-lg p-6 my-1 text-gray-200 bg-gray-900" > 
         <svg  xmlns="http://www.w3.org/2000/svg"  width="46"  height="46"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  
             class="icon icon-tabler icons-tabler-outline icon-tabler-contract"
           >
@@ -56,7 +56,7 @@
 
       </div>
 
-      <div class="flex flex-col items-center flex-1 rounded-lg p-6 text-gray-200 bg-gray-900" > 
+      <div class="flex flex-col items-center flex-1 rounded-lg p-6 my-1 text-gray-200 bg-gray-900" > 
         <svg  xmlns="http://www.w3.org/2000/svg"  width="46"  height="46"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  
           class="icon icon-tabler icons-tabler-outline icon-tabler-trending-up"
         >
