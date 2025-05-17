@@ -24,6 +24,9 @@
 
     async function fetchSearchResults(){
         loading.value = true;
+        
+        //Reset mensaje INDISPENSABLE para rerender
+        errorMessage.value = '';  
 
         try {
             const params = {
