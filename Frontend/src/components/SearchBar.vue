@@ -17,8 +17,8 @@ function handleSubmit() {
     class="relative w-full h-[250px] md:h-[400px] bg-[url('/img/office.webp')] bg-cover bg-center md:bg-[center_bottom_40%] 
           bg-no-repeat flex items-center justify-center"
   >
-    <h1 class="absolute top-5 text-4xl font-semibold text-gray-900 text-center drop-shadow-lg">
-      Portal de ofertas para prácticas laborales
+    <h1 class="absolute top-4 text-4xl font-bold text-black text-center drop-shadow-lg bg-gray-50/40 rounded-lg py-1 px-3">
+      Portal de ofertas de prácticas laborales
     </h1>
 
     <form
@@ -31,10 +31,12 @@ function handleSubmit() {
         class="w-full md:flex-1 p-2 rounded-lg bg-gray-100 text-gray-800"
       >
         <option disabled value="">Provincia</option>
-        <option value="MAD">Madrid</option>
-        <option value="BCN">Barcelona</option>
-        <option value="VAL">Valencia</option>
-        <option value="MAL">Málaga</option>
+        <option value="Barcelona">Barcelona</option>
+        <option value="Sevilla">Sevilla</option>
+        <option value="Madrid">Madrid</option>
+        <option value="Malaga">Málaga</option>
+        <option value="Valencia">Valencia</option>
+        <option value="Zaragoza">Zaragoza</option>
       </select>
 
       <!-- Select Rama de estudios -->
@@ -48,6 +50,7 @@ function handleSubmit() {
         <option value="sanidad">Sanidad</option>
         <option value="quimica">Química</option>
         <option value="electricidad">Eelectricidad</option>
+        <option value="mecanica">Fabricación y mecánica</option>
 
       </select>
 
@@ -63,7 +66,7 @@ function handleSubmit() {
 
       <button
         type="submit"
-        class="w-full md:w-auto p-2 rounded-lg bg-emerald-500 text-gray-50 hover:bg-emerald-600 transition duration-300"
+        class="w-full md:w-auto p-2 rounded-lg bg-emerald-500 text-gray-50 cursor-pointer hover:bg-emerald-600 transition duration-300"
       >
         Buscar Prácticas
       </button>
