@@ -4,7 +4,7 @@
     import { getJobOffer } from '@/services/seacrhService';
 
     const route = useRoute();
-    const jobOffer = ref(null);
+    const jobOffer = ref({});
     const errorMessage = ref('');
 
     const loadJobOffer = async ()=>{
@@ -21,7 +21,7 @@
 </script>
 
 <template>
-    <div class="md:flex justify-center mx-auto py-10 text-gray-100 md:min-h-200">
+    <div class="md:flex justify-center mx-auto py-10 text-gray-100 md:min-h-180">
         <div v-if="errorMessage" class="text-3xl font-semibold">
             {{ errorMessage }}
         </div>
