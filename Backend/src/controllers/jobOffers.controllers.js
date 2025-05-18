@@ -17,9 +17,9 @@ export const getJobOffers = async (req, res) =>{
 export const getJobOfferById = async (req, res) =>{
     try {       
         const { id } = req.params;
-        const jobOffer = findJobOfferById(id);
+        const jobOffer = await findJobOfferById(id);
         if(!jobOffer) return res.status(404).json({ message: "La oferta no ha sido encontrada" }); 
-        return res.status(200).json(rows[0]); 
+        return res.status(200).json(jobOffer); 
     
     } catch (error) {
 
