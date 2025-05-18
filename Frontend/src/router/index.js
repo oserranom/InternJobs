@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import SearchResultsView from '@/views/SearchResultsView.vue';
+import JobOfferView from '@/views/JobOfferView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,6 +16,12 @@ const router = createRouter({
       name: 'search',
       component: SearchResultsView
     },
+    {
+      path: '/offer/:id',
+      name: 'JobOfferDetail',
+      component: JobOfferView,
+      props: true
+    }
   ],
 }); 
 

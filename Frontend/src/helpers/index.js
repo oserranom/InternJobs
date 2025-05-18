@@ -1,4 +1,5 @@
-function formatDate(isoDate){
+
+export function formatDate(isoDate){
     const date = new Date(isoDate);
     return date.toLocaleDateString("es-ES",{
         day: "2-digit",
@@ -7,4 +8,7 @@ function formatDate(isoDate){
     });
 }
 
-export default formatDate; 
+export function truncate(text, maxLength){
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+}
+
