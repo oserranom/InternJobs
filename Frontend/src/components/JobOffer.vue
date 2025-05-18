@@ -29,7 +29,7 @@
             <div 
                 v-if="jobOffer.salary > 0"
                 class="bg-emerald-100 text-gray-800 px-2 rounded-lg font-semibold">
-                {{ jobOffer.salary }}
+                {{ jobOffer.salary }}€
             </div>
         </div>
 

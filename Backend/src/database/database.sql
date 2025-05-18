@@ -34,7 +34,7 @@ CREATE TABLE job_offers (
     location VARCHAR(255),
     education_level VARCHAR(20),
     study_field VARCHAR(50),
-    salary DECIMAL(10,2),
+    salary DECIMAL(10,0),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
 );
