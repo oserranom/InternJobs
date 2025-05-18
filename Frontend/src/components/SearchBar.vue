@@ -51,11 +51,11 @@
     >
       <option disabled value="">Rama de estudios</option>
       <option value="it">Informática y telecomunicaciones</option>
-      <option value="marketing">Comercio y marketing</option>
+      <option value="márketing">Comercio y marketing</option>
       <option value="sanidad">Sanidad</option>
-      <option value="quimica">Química</option>
+      <option value="química">Química</option>
       <option value="electricidad">Eelectricidad</option>
-      <option value="mecanica">Fabricación y mecánica</option>
+      <option value="fab/mec">Fabricación y mecánica</option>
 
     </select>
 

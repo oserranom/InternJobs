@@ -3,6 +3,7 @@
     import { useRoute } from 'vue-router';
     import { searchJobs } from '@/services/seacrhService';
     import SearchBar from '@/components/SearchBar.vue';
+    import JobOffer from '@/components/JobOffer.vue';
 
     const route = useRoute();
 
@@ -62,14 +63,18 @@
     </div>
 
     <main class="flex justify-center">
-        <div class="w-full md:w-1/2">
+        <div class="w-full md:w-1/2 mb-3">
             <h2 
                 v-if="errorMessage"
                 class="text-2xl font-semibold text-center mt-10 mb-100"
             >{{ errorMessage }}</h2>
 
             <div v-else>
-                JobOffer.vue
+                <JobOffer 
+                    v-for="jobOffer in jobOffers"
+                    :key="jobOffer.id"
+                    :jobOffer="jobOffer"
+                />
             </div>
         </div>
         
