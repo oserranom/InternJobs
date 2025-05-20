@@ -71,7 +71,7 @@
 
     <button
       type="submit"
-      class="w-full md:w-auto p-2 rounded-lg bg-emerald-500 text-gray-50 cursor-pointer hover:bg-emerald-600 transition duration-300"
+      class="w-full md:w-auto p-2 rounded-lg bg-emerald-500 text-gray-100 cursor-pointer hover:bg-emerald-600 transition duration-300"
     >
       Buscar Prácticas
     </button>
