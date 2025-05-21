@@ -1,5 +1,62 @@
 <script setup>
     import { RouterLink } from 'vue-router';
+    import { reactive, computed, ref } from 'vue';
+    import Alert from '@/components/Alert.vue';
+    import { isValidPhone } from '@/helpers';
+
+
+    const candidate = reactive({
+        name: '',
+        email: '',
+        phone_number: '',
+        cv: '',
+        password: ''
+    });
+
+    const confirmPass = ref(''); 
+
+    const alert = reactive({
+        type: '',
+        message: ''
+    }); 
+
+    const maxLength = 4000;
+
+    const restCaracts = computed(()=>{
+        return maxLength - candidate.cv.length;
+    });
+
+
+    const deleteAlert = ()=>{
+        setTimeout(()=>{
+            alert.message = ''
+        }, 3000);
+    }
+
+    const showAlert = (type, message) =>{
+        alert.type = type;
+        alert.message = message;
+
+        deleteAlert(); 
+    }
+
+
+    const formValidation = async ()=>{
+        if(Object.values(candidate).includes('')){
+            showAlert('error', 'Todos los campos son requeridos'); 
+            return;
+        }
+        if(!isValidPhone(candidate.phone_number)){
+            showAlert('error', 'El formato de teléfono no es válido, solo se permiten números');
+            return;
+        }
+        if(candidate.password !== confirmPass.value){
+            showAlert('error', 'Password no coincide con la confirmación');
+            return; 
+        }
+     
+
+    }
 
 
 </script>
@@ -25,7 +82,7 @@
 
             <form
                 class="p-5"
-                @submit.prevent="validar"
+                @submit.prevent="formValidation"
             >
                 <div class="w-full p-3">
                     <label for="name" class="block font-semibold">Nombre: </label>
@@ -34,6 +91,7 @@
                         id="name"
                         placeholder="Nombre"
                         class="w-full p-2 bg-gray-100 rounded text-gray-900"
+                        v-model="candidate.name"
                     >
                 </div>
 
@@ -44,6 +102,7 @@
                         id="email"
                         placeholder="Email"
                         class="w-full p-2 bg-gray-100 rounded text-gray-900"
+                        v-model="candidate.email"
                     >
                 </div>
 
@@ -54,6 +113,7 @@
                         id="phone"
                         placeholder="Teléfono"
                         class="w-full p-2 bg-gray-100 rounded text-gray-900"
+                        v-model="candidate.phone_number"
                     >
                 </div>
 
@@ -64,22 +124,67 @@
                         id="cv"
                         class="w-full bg-gray-100 rounded text-gray-900 p-2 min-h-50"
                         placeholder="Currículum en texto"
+                        v-model="candidate.cv"
+                        :maxlength="maxLength"
                     ></textarea>
+                    <p class="text-sm text-right font-semibold">{{ restCaracts }}</p>
                 </div>
 
-                <div class="w-full p-3 mb-2">
+                <div class="w-full p-3 -mt-2">
                     <label for="password" class="block font-semibold">Password: </label>
                     <input 
                         type="password"
                         id="password"
                         placeholder="Introduce tu contraseña"
                         class="w-full p-2 bg-gray-100 rounded text-gray-900"
+                        v-model="candidate.password"
+                    >
+                </div>
+
+                <div class="w-full p-3 mb-2">
+                    <label for="confirmPassword" class="block font-semibold">Confirma Password: </label>
+                    <input 
+                        type="password"
+                        id="confirmPassword"
+                        placeholder="Confirma tu contraseña"
+                        class="w-full p-2 bg-gray-100 rounded text-gray-900"
+                        v-model="confirmPass"
+                    >
+                </div>
+
+                <div class="w-full p-3">
+                    <input 
+                        type="submit"
+                        class="bg-emerald-500 hover:bg-emerald-600 rounded w-full py-2 font-semibold"
+                        value="Crear Cuenta"
                     >
                 </div>
 
             </form>
 
+            <!--Añadiendo transition-->
+            <div class="p-7 -mt-5">
+                <Transition name="fade">
+                    <Alert 
+                        v-if="alert.message"
+                        :alert="alert"
+                    />
+                </Transition>
+            </div>
+            
+
         </div>
 
     </div>
 </template>
+
+
+<style scoped>
+    /*Este style solo afecta al desvanecimiento de la Alert*/
+    .fade-enter-active, .fade-leave-active {
+    transition: opacity 1s ease;
+    }
+    .fade-enter-from, .fade-leave-to {
+    opacity: 0;
+    }
+</style>
