@@ -1,9 +1,11 @@
 <script setup>
-    import { RouterLink } from 'vue-router';
+    import { RouterLink, useRouter } from 'vue-router';
     import { reactive, computed, ref } from 'vue';
     import Alert from '@/components/Alert.vue';
     import { isValidPhone } from '@/helpers';
+    import { registerCandidate } from '@/services/authService';
 
+    const router = useRouter(); 
 
     const candidate = reactive({
         name: '',
@@ -54,8 +56,33 @@
             showAlert('error', 'Password no coincide con la confirmación');
             return; 
         }
-     
 
+        handleSubmit(); 
+     
+    }
+
+    const handleSubmit = async ()=>{
+        try {
+            const response = await registerCandidate(candidate);
+            console.log(response); 
+
+            candidate.name = '';
+            candidate.email = '';
+            candidate.phone_number = '';
+            candidate.cv = '';
+            candidate.password = '';
+            confirmPass.value = '';
+
+            showAlert('success', 'Candidato registrado con éxito');
+            setTimeout(() => {
+                router.push({ name: 'LoginCandidate'}); 
+            }, 3500);
+
+            
+        } catch (error) {
+            console.log(error);
+            showAlert('error', error); 
+        }
     }
 
 
@@ -155,7 +182,7 @@
                 <div class="w-full p-3">
                     <input 
                         type="submit"
-                        class="bg-emerald-500 hover:bg-emerald-600 rounded w-full py-2 font-semibold"
+                        class="bg-emerald-500 hover:bg-emerald-600 rounded w-full  py-2 font-semibold cursor-pointer"
                         value="Crear Cuenta"
                     >
                 </div>

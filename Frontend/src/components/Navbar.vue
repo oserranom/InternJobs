@@ -9,7 +9,8 @@ import { RouterLink } from 'vue-router';
         <div class="text-center md:flex justify-between px-15 py-2 items-center">
 
             <RouterLink
-                class="text-3xl font-serif font-bold text-gray-50 hover:text-emerald-400 transition duration-300 ease-in-out"
+                class="text-3xl font-serif font-bold text-gray-50 hover:text-emerald-400 transition duration-300 ease-in-out
+                    text-shadow-emerald"
                 :to="{name: 'home'}"
             >
                 Intern<span class="font-sans font-extrabold text-emerald-400">JOBS</span>
@@ -52,3 +53,10 @@ import { RouterLink } from 'vue-router';
         </div>
     </nav>
 </template>
+
+<style>
+    .text-shadow-emerald:hover {
+        text-shadow:  2px 2px 4px #6ee7b7; /* emerald-400 */
+        transition: ease 300ms;
+    }
+</style>
