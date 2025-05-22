@@ -56,7 +56,7 @@ import { RouterLink } from 'vue-router';
 
 <style>
     .text-shadow-emerald:hover {
-        text-shadow:  2px 2px 4px #6ee7b7; /* emerald-400 */
+        text-shadow:  0 0 6px #6ee7b7; /* emerald-400 */
         transition: ease 300ms;
     }
 </style>
