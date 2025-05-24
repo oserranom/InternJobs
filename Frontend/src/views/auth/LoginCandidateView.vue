@@ -3,6 +3,10 @@
     import { useRouter } from 'vue-router';
     import Login from '@/components/Login.vue';
     import Alert from '@/components/Alert.vue';
+    import { loginCandidate } from '@/services/authService';
+    import { useCandidateStore } from '@/stores/candidates';
+
+    const candidateStore = useCandidateStore();
 
     const router = useRouter(); 
 
@@ -24,9 +28,23 @@
         deleteAlert(); 
     }
 
-    const handleLogin = async()=>{
+    const handleLogin = async(user)=>{
         try {
-            showAlert('success', 'Hola'); 
+            //Petición al backend
+            const data = await loginCandidate(user);
+            //Alert success
+            showAlert('success', data.message); 
+            //Guardar JWT en el navegador
+            localStorage.setItem('AUTH_TOKEN', data.candidate.token);
+
+            //Actualiza el store global
+            candidateStore.candidate = data.candidate; 
+
+            //Hacia home
+            setTimeout(() => {
+                router.push({ name: 'home'})
+            }, 3200);
+
         } catch (error) {
             console.log(error);
             showAlert('error', error); 

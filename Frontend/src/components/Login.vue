@@ -35,7 +35,7 @@
             return; 
         }
 
-            //Emitimos a la vista
+        //Emitimos a la vista
         emit('submit', {...user}); 
     }
     

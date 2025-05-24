@@ -1,6 +1,18 @@
-<script>
-import { RouterLink } from 'vue-router';
+<script setup>
+    import { RouterLink, useRouter } from 'vue-router';
+    import { useCandidateStore } from '@/stores/candidates';
+    import { computed } from 'vue';
 
+    const candidateStore = useCandidateStore();
+    const router = useRouter(); 
+
+    const isLoggedIn = computed(() => {
+    return candidateStore.candidate && candidateStore.candidate.name;
+    });
+
+    const handleLogout = ()=>{
+        candidateStore.logout();
+    }
 
 </script>
 
@@ -15,9 +27,36 @@ import { RouterLink } from 'vue-router';
             >
                 Intern<span class="font-sans font-extrabold text-emerald-400">JOBS</span>
             </RouterLink>
+
+
+            <div
+                v-if="isLoggedIn" 
+                class="text-center flex flex-col md:flex-row md:items-center"
+            >
+               <div class="my-5">
+                    <RouterLink 
+                        :to="{name: 'CandidateProfile'}"
+                        class="text-gray-50 text-lg hover:text-gray-800 mx-2 hover:bg-gray-50 transition duration-300 ease-in-out
+                            py-2 px-3 rounded-lg font-semibold"
+                    >
+                        {{ candidateStore.candidate.name }}
+                    </RouterLink>
+               </div>
+
+
+                <div class="my-5">
+                    <button
+                        class="rounded bg-red-500"
+                        @click="handleLogout"
+                    >
+                        Logout
+                    </button>
+                </div>
+                
+            </div>
                 
 
-            <div class="text-center flex flex-col md:flex-row md:items-center">
+            <div v-else class="text-center flex flex-col md:flex-row md:items-center">
                <div class="my-5">
                     <RouterLink 
                         :to="{name: 'home'}"

@@ -8,6 +8,7 @@ import CandidateRegisterView from '@/views/auth/CandidateRegisterView.vue';
 import CompanyRegisterView from '@/views/auth/CompanyRegisterView.vue';
 import LoginCandidateView from '@/views/auth/LoginCandidateView.vue';
 import LoginCompanyView from '@/views/auth/LoginCompanyView.vue';
+import CandidateProfileView from '@/views/candidate/CandidateProfileView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,6 +52,11 @@ const router = createRouter({
       path: '/login/company',
       name: 'LoginCompany',
       component: LoginCompanyView
+    },
+    {
+      path: '/candidate/profile',
+      name: 'CandidateProfile',
+      component: CandidateProfileView
     }
   ],
 }); 
