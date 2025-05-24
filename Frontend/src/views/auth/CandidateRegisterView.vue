@@ -52,6 +52,9 @@
             showAlert('error', 'El formato de teléfono no es válido, solo se permiten números');
             return;
         }
+        if(candidate.password.length < 6){
+            showAlert('error', 'El password requiere más carácteres')
+        }
         if(candidate.password !== confirmPass.value){
             showAlert('error', 'Password no coincide con la confirmación');
             return; 

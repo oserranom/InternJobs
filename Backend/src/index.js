@@ -6,6 +6,7 @@ import jobOffersRouter from "./routes/jobOffers.routes.js";
 import companiesRouter from "./routes/companies.routes.js";
 
 
+
 const app = express();
 
 app.use(express.json());
@@ -38,3 +39,4 @@ app.use('/api/companies', companiesRouter);
 app.listen(PORT);
 console.log('Server running on port: ', PORT); 
 console.log('CORS url accepted: ', process.env.FRONTEND_URL); 
+

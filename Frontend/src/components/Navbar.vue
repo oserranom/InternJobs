@@ -30,7 +30,7 @@ import { RouterLink } from 'vue-router';
 
                 <div class="my-5">
                     <RouterLink 
-                        :to="{name: 'home'}"
+                        :to="{name: 'LoginCandidate'}"
                         class="text-gray-50 text-lg hover:text-gray-800 mx-2 hover:bg-gray-50 transition duration-300 ease-in-out
                             py-2 px-3 rounded-lg font-semibold"
                     >

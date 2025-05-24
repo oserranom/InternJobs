@@ -2,8 +2,7 @@
     import { RouterLink, useRouter } from 'vue-router';
     import { reactive, computed, ref } from 'vue';
     import Alert from '@/components/Alert.vue';
-    import { isValidPhone } from '@/helpers';
-    import { registerCandidate } from '@/services/authService';
+    import { registerCompany } from '@/services/authService';
 
     const router = useRouter(); 
 
@@ -49,19 +48,20 @@
             showAlert('error', 'Todos los campos son requeridos'); 
             return;
         }
-        
+        if(company.password.length < 6){
+            showAlert('error', 'El password requiere más carácteres')
+        }
         if(company.password !== confirmPass.value){
             showAlert('error', 'Password no coincide con la confirmación');
             return; 
         }
 
         handleSubmit(); 
-     
     }
 
     const handleSubmit = async ()=>{
         try {
-            const response = await registerCandidate(company);
+            const response = await registerCompany(company);
             console.log(response); 
 
 

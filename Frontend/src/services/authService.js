@@ -34,3 +34,38 @@ export async function registerCandidate({ name, email, phone_number, cv, passwor
         throw error;
     }
 }
+
+export async function registerCompany({ name, email, password, industry, description, company_url }){
+    const url = `${baseURL}/companies`; 
+
+    try {
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name,
+                email,
+                password,
+                industry,
+                description,
+                company_url
+            })
+        });
+
+        const data = await response.json();
+        console.log(data); 
+
+        if(!response.ok){
+            throw new Error(data.message || 'El candidato no ha podido ser registrado');
+        }
+
+        return data; 
+
+    } catch (error) {
+        console.error(error.message);
+        throw error;
+    }
+}
