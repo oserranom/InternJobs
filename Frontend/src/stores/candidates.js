@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router';
 import { getCandidate } from '@/services/authService';
@@ -25,7 +25,7 @@ export const useCandidateStore = defineStore('candidate', ()=>{
   function logout(){
     localStorage.removeItem('AUTH_TOKEN');
     localStorage.removeItem('USER_ROLE');
-    candidate.value = null;
+    candidate.value = {};
     router.push({ name: 'home' }); 
   }
   

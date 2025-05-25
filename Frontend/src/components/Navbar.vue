@@ -1,10 +1,10 @@
 <script setup>
-    import { computed, onMounted, ref } from 'vue';
+    import { computed, onMounted } from 'vue';
     import { RouterLink } from 'vue-router';
     import { useCandidateStore } from '@/stores/candidates';
     import { useCompanyStore } from '@/stores/companies';
 
-    
+    //Computed siempre debe retornar o abreviar eliminando las llaves
     const role = computed(() => localStorage.getItem('USER_ROLE')); //candidate o company
     
 

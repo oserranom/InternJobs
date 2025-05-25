@@ -13,6 +13,8 @@ import LoginCompanyView from '@/views/auth/LoginCompanyView.vue';
 //Profiles
 import CandidateProfileView from '@/views/profile/CandidateProfileView.vue';
 import CompanyProfileView from '@/views/profile/CompanyProfileView.vue';
+//ApplyForm
+import ApplyFormView from '@/views/ApplyFormView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,6 +33,12 @@ const router = createRouter({
       path: '/offer/:id',
       name: 'JobOfferDetail',
       component: JobOfferView,
+      props: true
+    },
+    {
+      path: '/offer/:id/apply',
+      name: 'ApplyForm',
+      component: ApplyFormView,
       props: true
     },
 

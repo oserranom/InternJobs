@@ -1,11 +1,13 @@
 <script setup>
     import { ref, onMounted, computed } from 'vue';
-    import { useRoute } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
     import { getJobOffer } from '@/services/seacrhService';
     import { formatDate } from '@/helpers';
     import { useCandidateStore } from '@/stores/candidates';
 
     const route = useRoute();
+    const router = useRouter(); 
+
     const jobOffer = ref({});
     const errorMessage = ref('');
     
@@ -29,6 +31,10 @@
         //Se evalúa el objeto entero así como id por un tema de carga y posibles errores
         return !!candidateStore.candidate && !!candidateStore.candidate.id; 
     }); 
+
+    const goToApplyForm = ()=>{
+        router.push({ name: 'ApplyForm', params: { id: jobOffer.value.id }}); 
+    }
 
 </script>
 
@@ -90,7 +96,7 @@
                 
                 <button 
                     v-if="isLoggedIn"
-                    @click.prevent=""
+                    @click.prevent="goToApplyForm"
                     type="button"
                     class="bg-emerald-500 w-full md:w-1/3 py-1 rounded-lg font-semibold cursor-pointer hover:bg-emerald-600"
                 >

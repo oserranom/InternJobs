@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router';
 import { getCompany } from '@/services/authService';
@@ -16,7 +16,7 @@ export const useCompanyStore = defineStore('companie', ()=>{
 
         } catch (error) {
             console.log(error);
-            company.value = null; 
+            company.value = {}; 
         }finally {
             loading.value = false; 
         }
