@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, computed } from 'vue';
     import { useRoute } from 'vue-router';
     import { getJobOffer } from '@/services/seacrhService';
     import { formatDate } from '@/helpers';
