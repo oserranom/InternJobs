@@ -5,7 +5,8 @@
     import { useCompanyStore } from '@/stores/companies';
 
     
-    const role = localStorage.getItem('USER_ROLE'); //candidate o company
+    const role = computed(() => localStorage.getItem('USER_ROLE')); //candidate o company
+    
 
     const candidateStore = useCandidateStore();
     const companyStore = useCompanyStore(); 
@@ -16,21 +17,19 @@
 
 
     onMounted(()=>{
-        if(role === 'company'){
+        if(role.value === 'company'){
             companyStore.fetchCompany();
         } 
-        if(role === 'candidate'){
+        if(role.value === 'candidate'){
             candidateStore.fetchCandidate();
         }  
     });
 
 
     const handleLogout = ()=>{
-        if(role === 'candidate'){
-            candidateStore.logout();
-        }else{
-            companyStore.logout(); 
-        }
+        candidateStore.logout();
+        companyStore.logout(); 
+        role.value = null; 
     }
 
 </script>
@@ -57,7 +56,7 @@
                     class="my-5"
                >
                     <RouterLink 
-                        :to="{name: role === 'candidate' ? 'CandidateProfile' : 'CompanyProfile' }"
+                        :to="{name: 'CandidateProfile' }"
                         class="text-gray-100 text-lg font-semibold mx-4 bg-emerald-500 px-2 py-1 rounded 
                                 hover:bg-emerald-600 flex justify-between gap-2 items-center max-w-75"
                     >
@@ -85,7 +84,7 @@
                     class="my-5"
                >
                     <RouterLink 
-                        :to="{name: role === 'candidate' ? 'CandidateProfile' : 'CompanyProfile' }"
+                        :to="{ name: 'CompanyProfile' }"
                         class="text-gray-100 text-lg font-semibold mx-4 bg-emerald-500 px-2 py-1 rounded 
                                 hover:bg-emerald-600 flex justify-between gap-2 items-center max-w-75"
                     >

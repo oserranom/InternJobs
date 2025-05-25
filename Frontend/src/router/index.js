@@ -11,8 +11,8 @@ import CompanyRegisterView from '@/views/auth/CompanyRegisterView.vue';
 import LoginCandidateView from '@/views/auth/LoginCandidateView.vue';
 import LoginCompanyView from '@/views/auth/LoginCompanyView.vue';
 //Profiles
-import CandidateProfileView from '@/views/candidate/CandidateProfileView.vue';
-import CompanyProfileView from '@/views/candidate/CompanyProfileView.vue';
+import CandidateProfileView from '@/views/profile/CandidateProfileView.vue';
+import CompanyProfileView from '@/views/profile/CompanyProfileView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

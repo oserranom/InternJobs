@@ -88,13 +88,22 @@
                 <h1 class="text-2xl font-semibold mb-2">Descripción: </h1>
                 <p class="mb-5">{{ jobOffer.description }}</p>
                 
-                <button
-                    type="submit"
+                <button 
+                    v-if="isLoggedIn"
+                    @click.prevent=""
+                    type="button"
                     class="bg-emerald-500 w-full md:w-1/3 py-1 rounded-lg font-semibold cursor-pointer hover:bg-emerald-600"
-                    :disabled="!isLoggedIn"
                 >
                     Inscribirme
                 </button>
+
+                <p 
+                    v-else
+                    class="text-red-500 text-center mt-10"
+                >
+                    Haz login como <span class="text-emerald-400">candidato</span> para aplicar a esta oferta
+                </p>
+
             </div>
 
         </main>
