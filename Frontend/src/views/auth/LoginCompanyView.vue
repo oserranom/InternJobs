@@ -36,6 +36,7 @@
             showAlert('success', data.message); 
             //Guardar JWT en el navegador
             localStorage.setItem('AUTH_TOKEN', data.company.token);
+            localStorage.setItem('USER_ROLE', 'company'); 
 
             //Actualiza el store global
             companyStore.company = data.company; 

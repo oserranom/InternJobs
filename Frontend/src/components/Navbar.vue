@@ -1,28 +1,32 @@
 <script setup>
-    import { computed } from 'vue';
-    import { RouterLink, useRouter } from 'vue-router';
+    import { computed, onMounted, ref } from 'vue';
+    import { RouterLink } from 'vue-router';
     import { useCandidateStore } from '@/stores/candidates';
     import { useCompanyStore } from '@/stores/companies';
 
+    
+    const role = localStorage.getItem('USER_ROLE'); //candidate o company
 
     const candidateStore = useCandidateStore();
     const companyStore = useCompanyStore(); 
 
-    const isCandidateLoggedIn = computed(()=>{
-        return candidateStore.candidate && candidateStore.candidate.name;
+    const isCandidateLoggedIn = computed(() => !!candidateStore.candidate?.id);
+    const isCompanyLoggedIn = computed(() => !!companyStore.company?.id);
+    const user = computed(() => isCandidateLoggedIn.value || isCompanyLoggedIn.value);
+
+
+    onMounted(()=>{
+        if(role === 'company'){
+            companyStore.fetchCompany();
+        } 
+        if(role === 'candidate'){
+            candidateStore.fetchCandidate();
+        }  
     });
 
-    const isCompanyLoggedIn = computed(()=>{
-        return companyStore.company && companyStore.company.name; 
-    });
-
-    const userType = computed(()=>{
-        if(isCandidateLoggedIn.value) return 'candidate';
-        if(isCompanyLoggedIn.value) return 'company';
-    }); 
 
     const handleLogout = ()=>{
-        if(isCandidateLoggedIn.value){
+        if(role === 'candidate'){
             candidateStore.logout();
         }else{
             companyStore.logout(); 
@@ -45,15 +49,15 @@
 
 
             <div
-                v-if="userType" 
+                v-if="user" 
                 class="text-center flex flex-col md:flex-row md:items-center"
             >
                <div 
-                    v-if="userType === 'candidate'"
+                    v-if="role === 'candidate'"
                     class="my-5"
                >
                     <RouterLink 
-                        :to="{name: userType === 'candidate' ? 'CandidateProfile' : 'CompanyProfile' }"
+                        :to="{name: role === 'candidate' ? 'CandidateProfile' : 'CompanyProfile' }"
                         class="text-gray-100 text-lg font-semibold mx-4 bg-emerald-500 px-2 py-1 rounded 
                                 hover:bg-emerald-600 flex justify-between gap-2 items-center max-w-75"
                     >
@@ -81,7 +85,7 @@
                     class="my-5"
                >
                     <RouterLink 
-                        :to="{name: userType === 'candidate' ? 'CandidateProfile' : 'CompanyProfile' }"
+                        :to="{name: role === 'candidate' ? 'CandidateProfile' : 'CompanyProfile' }"
                         class="text-gray-100 text-lg font-semibold mx-4 bg-emerald-500 px-2 py-1 rounded 
                                 hover:bg-emerald-600 flex justify-between gap-2 items-center max-w-75"
                     >

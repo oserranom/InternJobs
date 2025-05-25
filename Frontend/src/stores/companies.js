@@ -9,28 +9,31 @@ export const useCompanyStore = defineStore('companie', ()=>{
   const company = ref({});
   const loading = ref(true);
 
-  onMounted(async() =>{
-    try {
-      const data = await getCompany();
-      company.value = data.company; 
-    } catch (error) {
-      console.log(error);
-    }finally {
-      loading.value = false; 
+    async function fetchCompany(){
+        try {
+            const data = await getCompany();
+            company.value = data.company; 
+
+        } catch (error) {
+            console.log(error);
+            company.value = null; 
+        }finally {
+            loading.value = false; 
+        }
     }
-    
-  }); 
 
   function logout(){
     localStorage.removeItem('AUTH_TOKEN');
+    localStorage.removeItem('USER_ROLE'); 
     company.value = null;
     router.push({ name: 'home' }); 
   }
 
   return{
     company,
+    loading,
+    fetchCompany,
     logout,
-
   }
 
 }); 

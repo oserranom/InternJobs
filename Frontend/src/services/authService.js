@@ -169,7 +169,17 @@ export async function getCompany(){
             headers:{
                 Authorization: `Bearer ${token}`
             }
-        })
+        });
+
+        const data = await response.json();
+        console.log(data); 
+
+        if(!response.ok){
+            throw new Error(data.message || 'No pudo realizarse el Login');
+        }
+
+        return data; 
+        
     } catch (error) {
         console.log(error);
         throw error;

@@ -3,10 +3,12 @@
     import { useRoute } from 'vue-router';
     import { getJobOffer } from '@/services/seacrhService';
     import { formatDate } from '@/helpers';
+    import { useCandidateStore } from '@/stores/candidates';
 
     const route = useRoute();
     const jobOffer = ref({});
     const errorMessage = ref('');
+    
 
     const loadJobOffer = async ()=>{
         try {
@@ -18,6 +20,15 @@
     }
 
     onMounted(loadJobOffer);
+
+    const candidateStore = useCandidateStore();
+
+    const isLoggedIn = computed(()=>{
+        const candidate = candidateStore.candidate; 
+        //Doble negación para tranformar en booleano stricto
+        //Se evalúa el objeto entero así como id por un tema de carga y posibles errores
+        return !!candidateStore.candidate && !!candidateStore.candidate.id; 
+    }); 
 
 </script>
 
@@ -80,6 +91,7 @@
                 <button
                     type="submit"
                     class="bg-emerald-500 w-full md:w-1/3 py-1 rounded-lg font-semibold cursor-pointer hover:bg-emerald-600"
+                    :disabled="!isLoggedIn"
                 >
                     Inscribirme
                 </button>
