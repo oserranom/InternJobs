@@ -101,6 +101,37 @@ export async function loginCandidate({ email, password }){
     }
 }
 
+export async function loginCompany({ email, password }){
+    const url = `${baseURL}/companies/login`; 
+
+    try {
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+                password
+            })
+        });
+
+        const data = await response.json();
+        console.log(data); 
+
+        if(!response.ok){
+            throw new Error(data.message || 'No pudo realizarse el Login');
+        }
+
+        return data; 
+
+    } catch (error) {
+        console.error(error);
+        throw error; 
+    }
+}
+
 export async function getCandidate(){
     const url = `${baseURL}/candidates/profile`;
     const token = localStorage.getItem('AUTH_TOKEN'); 
@@ -126,4 +157,22 @@ export async function getCandidate(){
         console.log(error);
         throw error; 
     }
+}
+
+export async function getCompany(){
+    const url = `${baseURL}/companies/profile`;
+    const token = localStorage.getItem('AUTH_TOKEN'); 
+    if (!token) throw new Error('Token de autenticación no encontrado');
+
+    try {
+        const response = await fetch(url, {
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+
 }

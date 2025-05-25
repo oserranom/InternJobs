@@ -1,17 +1,32 @@
 <script setup>
+    import { computed } from 'vue';
     import { RouterLink, useRouter } from 'vue-router';
     import { useCandidateStore } from '@/stores/candidates';
-    import { computed } from 'vue';
+    import { useCompanyStore } from '@/stores/companies';
+
 
     const candidateStore = useCandidateStore();
-    const router = useRouter(); 
+    const companyStore = useCompanyStore(); 
 
-    const isLoggedIn = computed(() => {
-    return candidateStore.candidate && candidateStore.candidate.name;
+    const isCandidateLoggedIn = computed(()=>{
+        return candidateStore.candidate && candidateStore.candidate.name;
     });
 
+    const isCompanyLoggedIn = computed(()=>{
+        return companyStore.company && companyStore.company.name; 
+    });
+
+    const userType = computed(()=>{
+        if(isCandidateLoggedIn.value) return 'candidate';
+        if(isCompanyLoggedIn.value) return 'company';
+    }); 
+
     const handleLogout = ()=>{
-        candidateStore.logout();
+        if(isCandidateLoggedIn.value){
+            candidateStore.logout();
+        }else{
+            companyStore.logout(); 
+        }
     }
 
 </script>
@@ -30,23 +45,64 @@
 
 
             <div
-                v-if="isLoggedIn" 
+                v-if="userType" 
                 class="text-center flex flex-col md:flex-row md:items-center"
             >
-               <div class="my-5">
+               <div 
+                    v-if="userType === 'candidate'"
+                    class="my-5"
+               >
                     <RouterLink 
-                        :to="{name: 'CandidateProfile'}"
-                        class="text-gray-50 text-lg hover:text-gray-800 mx-2 hover:bg-gray-50 transition duration-300 ease-in-out
-                            py-2 px-3 rounded-lg font-semibold"
+                        :to="{name: userType === 'candidate' ? 'CandidateProfile' : 'CompanyProfile' }"
+                        class="text-gray-100 text-lg font-semibold mx-4 bg-emerald-500 px-2 py-1 rounded 
+                                hover:bg-emerald-600 flex justify-between gap-2 items-center max-w-75"
                     >
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg"  
+                            width="20"  
+                            height="20"  
+                            viewBox="0 0 24 24"  
+                            fill="currentColor"  
+                            class="icon icon-tabler icons-tabler-filled icon-tabler-user"
+                        >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z" />
+                            <path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z" />
+                        </svg>
+
                         {{ candidateStore.candidate.name }}
+
+                    </RouterLink>
+               </div>
+
+
+               <div 
+                    v-else
+                    class="my-5"
+               >
+                    <RouterLink 
+                        :to="{name: userType === 'candidate' ? 'CandidateProfile' : 'CompanyProfile' }"
+                        class="text-gray-100 text-lg font-semibold mx-4 bg-emerald-500 px-2 py-1 rounded 
+                                hover:bg-emerald-600 flex justify-between gap-2 items-center max-w-75"
+                    >
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-building">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 21l18 0" /><path d="M9 8l1 0" /><path d="M9 12l1 0" />
+                        <path d="M9 16l1 0" /><path d="M14 8l1 0" />
+                        <path d="M14 12l1 0" /><path d="M14 16l1 0" />
+                        <path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16" />
+                    </svg>
+
+                        {{ companyStore.company.name }}
+
                     </RouterLink>
                </div>
 
 
                 <div class="my-5">
                     <button
-                        class="rounded bg-red-500"
+                        class="rounded font-semibold ml-2 bg-red-500 px-2 py-1.5 cursor-pointer hover:bg-red-600"
                         @click="handleLogout"
                     >
                         Logout
@@ -59,7 +115,7 @@
             <div v-else class="text-center flex flex-col md:flex-row md:items-center">
                <div class="my-5">
                     <RouterLink 
-                        :to="{name: 'home'}"
+                        :to="{name: 'LoginCompany'}"
                         class="text-gray-50 text-lg hover:text-gray-800 mx-2 hover:bg-gray-50 transition duration-300 ease-in-out
                             py-2 px-3 rounded-lg font-semibold"
                     >

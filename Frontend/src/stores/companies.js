@@ -1,18 +1,18 @@
 import { ref, onMounted } from 'vue'
 import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router';
-import { getCandidate } from '@/services/authService';
+import { getCompany } from '@/services/authService';
 
-export const useCandidateStore = defineStore('candidate', ()=>{
+export const useCompanyStore = defineStore('companie', ()=>{
 
   const router = useRouter();
-  const candidate = ref({});
+  const company = ref({});
   const loading = ref(true);
 
   onMounted(async() =>{
     try {
-      const data = await getCandidate();
-      candidate.value = data.candidate; 
+      const data = await getCompany();
+      company.value = data.company; 
     } catch (error) {
       console.log(error);
     }finally {
@@ -23,12 +23,12 @@ export const useCandidateStore = defineStore('candidate', ()=>{
 
   function logout(){
     localStorage.removeItem('AUTH_TOKEN');
-    candidate.value = null;
+    company.value = null;
     router.push({ name: 'home' }); 
   }
 
   return{
-    candidate,
+    company,
     logout,
 
   }

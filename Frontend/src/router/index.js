@@ -1,14 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
+//Home
 import HomeView from '@/views/HomeView.vue'
+//Search
 import SearchResultsView from '@/views/SearchResultsView.vue';
 import JobOfferView from '@/views/JobOfferView.vue';
-
 //Forms auth
 import CandidateRegisterView from '@/views/auth/CandidateRegisterView.vue';
 import CompanyRegisterView from '@/views/auth/CompanyRegisterView.vue';
 import LoginCandidateView from '@/views/auth/LoginCandidateView.vue';
 import LoginCompanyView from '@/views/auth/LoginCompanyView.vue';
+//Profiles
 import CandidateProfileView from '@/views/candidate/CandidateProfileView.vue';
+import CompanyProfileView from '@/views/candidate/CompanyProfileView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,6 +61,11 @@ const router = createRouter({
       path: '/candidate/profile',
       name: 'CandidateProfile',
       component: CandidateProfileView
+    },
+    {
+      path: '/company/profile',
+      name: 'CompanyProfile',
+      component: CompanyProfileView
     }
   ],
 }); 

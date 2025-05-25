@@ -75,3 +75,13 @@
 
 
 </template>
+
+<style scoped>
+    /*Este style solo afecta al desvanecimiento de la Alert*/
+    .fade-enter-active, .fade-leave-active {
+    transition: opacity 1s ease;
+    }
+    .fade-enter-from, .fade-leave-to {
+    opacity: 0;
+    }
+</style>

@@ -65,7 +65,7 @@
             console.log(response); 
 
 
-            showAlert('success', 'Empresa registrado con éxito');
+            showAlert('success', 'Empresa registrada con éxito');
             setTimeout(() => {
                 router.push({ name: 'LoginCompany'}); 
             }, 3500);
