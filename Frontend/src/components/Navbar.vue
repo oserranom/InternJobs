@@ -11,17 +11,19 @@
     const candidateStore = useCandidateStore();
     const companyStore = useCompanyStore(); 
 
+    const loading = computed(() => candidateStore.loading || companyStore.loading ); 
+
     const isCandidateLoggedIn = computed(() => !!candidateStore.candidate?.id);
     const isCompanyLoggedIn = computed(() => !!companyStore.company?.id);
-    const user = computed(() => isCandidateLoggedIn.value || isCompanyLoggedIn.value);
+    //const user = computed(() => isCandidateLoggedIn.value || isCompanyLoggedIn.value);
 
 
-    onMounted(()=>{
+    onMounted(async ()=>{
         if(role.value === 'company'){
-            companyStore.fetchCompany();
+           await companyStore.fetchCompany();
         } 
         if(role.value === 'candidate'){
-            candidateStore.fetchCandidate();
+           await candidateStore.fetchCandidate();
         }  
     });
 
@@ -46,9 +48,16 @@
                 Intern<span class="font-sans font-extrabold text-emerald-400">JOBS</span>
             </RouterLink>
 
+            
+            <!-- Loading -->
+            <div v-if="loading" class="text-gray-100 text-sm py-2 px-4 animate-pulse">
+                Cargando usuario...
+            </div>
 
+
+            <!-- Usuario Logueado -->
             <div
-                v-if="user" 
+                v-else-if="isCandidateLoggedIn || isCompanyLoggedIn" 
                 class="text-center flex flex-col md:flex-row md:items-center"
             >
                <div 
@@ -114,7 +123,7 @@
                 
             </div>
                 
-
+            <!-- Usuario NO Logueado -->
             <div v-else class="text-center flex flex-col md:flex-row md:items-center">
                <div class="my-5">
                     <RouterLink 
@@ -149,7 +158,9 @@
             </div>
 
         </div>
+
     </nav>
+    
 </template>
 
 <style>

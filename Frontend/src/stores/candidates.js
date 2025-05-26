@@ -7,9 +7,12 @@ export const useCandidateStore = defineStore('candidate', ()=>{
 
   const router = useRouter();
   const candidate = ref({});
-  const loading = ref(true);
+  const loading = ref(false);
 
   async function fetchCandidate(){
+
+    loading.value = false; 
+    
     try {
       const data = await getCandidate();
       candidate.value = data.candidate; 

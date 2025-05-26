@@ -17,7 +17,7 @@ export const insertNewCandidate = async (name, email, hashedPassword, cv, phone_
 
 export const findCandidateById = async (id) =>{
     //Consulta busca candidate por id
-    const { rows } = await pool.query("SELECT name, email, phone_number, cv FROM candidates WHERE id = $1", [id]);
+    const { rows } = await pool.query("SELECT id, name, email, phone_number, cv FROM candidates WHERE id = $1", [id]);
     return rows[0];
 }
 

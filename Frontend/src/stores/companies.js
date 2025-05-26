@@ -7,20 +7,23 @@ export const useCompanyStore = defineStore('companie', ()=>{
 
   const router = useRouter();
   const company = ref({});
-  const loading = ref(true);
+  const loading = ref(false);
 
-    async function fetchCompany(){
-        try {
-            const data = await getCompany();
-            company.value = data.company; 
+  async function fetchCompany(){
 
-        } catch (error) {
-            console.log(error);
-            company.value = {}; 
-        }finally {
-            loading.value = false; 
-        }
+    loading.value = true;
+
+    try {
+      const data = await getCompany();
+      company.value = data.company; 
+
+    } catch (error) {
+      console.log(error);
+      company.value = {}; 
+    }finally {
+      loading.value = false; 
     }
+  }
 
   function logout(){
     localStorage.removeItem('AUTH_TOKEN');
