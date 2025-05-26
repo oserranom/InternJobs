@@ -31,7 +31,6 @@
     const handleLogout = ()=>{
         candidateStore.logout();
         companyStore.logout(); 
-        role.value = null; 
     }
 
 </script>
@@ -160,7 +159,7 @@
         </div>
 
     </nav>
-    
+
 </template>
 
 <style>
