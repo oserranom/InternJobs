@@ -157,7 +157,10 @@
                         v-model="company.description"
                         :maxlength="maxLength"
                     ></textarea>
-                    <p class="text-sm text-right font-semibold">{{ restCaracts }}</p>
+                    <p 
+                        class="text-sm text-right font-semibold"
+                        :class="[restCaracts < 100 ? 'text-red-500' : 'text-gray-100']"
+                    >{{ restCaracts }}</p>
                 </div>
 
                 <div class="w-full p-3 -mt-2">

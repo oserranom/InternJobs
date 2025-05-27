@@ -40,8 +40,7 @@
         <div class="text-center md:flex justify-between px-15 py-2 items-center">
 
             <RouterLink
-                class="text-3xl font-serif font-bold text-gray-50 hover:text-emerald-400 transition duration-300 ease-in-out
-                    text-shadow-emerald"
+                class="text-3xl font-serif font-bold text-gray-50 hover:text-emerald-400 text-shadow-emerald"
                 :to="{name: 'home'}"
             >
                 Intern<span class="font-sans font-extrabold text-emerald-400">JOBS</span>
@@ -57,7 +56,7 @@
             <!-- Usuario Logueado -->
             <div
                 v-else-if="isCandidateLoggedIn || isCompanyLoggedIn" 
-                class="text-center flex flex-col md:flex-row md:items-center"
+                class="text-center flex flex-col md:flex-row items-center"
             >
                <div 
                     v-if="role === 'candidate'"
