@@ -19,6 +19,7 @@ export async function searchJobs({location, study_field, education_level}){
 
     } catch (error) {
         console.log(error); 
+        throw error;
     }
 }
 
@@ -39,5 +40,6 @@ export async function getJobOffer(id){
 
     } catch (error) {
         console.log(error); 
+        throw error; 
     }
 }
