@@ -1,6 +1,6 @@
 <script setup>
     import { useRoute, useRouter } from 'vue-router';
-    import { computed } from 'vue';
+    import { computed, onMounted } from 'vue';
 
     const route = useRoute();
     const router = useRouter();
@@ -25,11 +25,11 @@
 
     <div class="min-h-screen flex text-gray-100">
         <aside class="w-64 bg-gray-900 rounded">
-            <div class="p-6 mb-5 font-semibold text-2xl text-center">
+            <div class="p-6 mb-6 font-semibold text-2xl text-center">
                 Panel de Empresa
             </div>
 
-            <nav class="flex flex-col mt-4">
+            <nav class="flex flex-col border-t border-gray-200/30">
                 <button
                     v-for="item in menuItems"
                     :key="item.routeName"

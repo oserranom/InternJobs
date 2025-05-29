@@ -78,30 +78,30 @@ const router = createRouter({
     },
     {
       path: '/company/profile',
-      name: 'CompanyProfile',
       component: CompanyProfileView,
       children: [
         {
           path: '',
-          redirect: { name: 'CompanySettings'}
+          name: 'CompanyProfile',
+          redirect: { name: 'CompanyConfig'}
         },
         {
-          path: '/config',
+          path: 'config',
           name: 'CompanyConfig',
           component: CompanyAccountSettings
         },
         {
-          path: '/create_offer',
+          path: 'create_offer',
           name: 'CreateOffer',
           component: CreateJobOffer
         },
         {
-          path: '/applications',
+          path: 'applications',
           name: 'Applications',
           component: RecivedApplications
         },
         {
-          path: '/published_offers',
+          path: 'published_offers',
           name: 'PublishedOffers',
           component: PublishedJobOffers
         }
