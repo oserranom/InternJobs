@@ -171,8 +171,7 @@ export async function getCompany(){
             }
         });
 
-        const data = await response.json();
-        console.log(data); 
+        const data = await response.json(); 
 
         if(!response.ok){
             throw new Error(data.message || 'No pudo realizarse el Login');

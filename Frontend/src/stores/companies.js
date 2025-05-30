@@ -16,10 +16,12 @@ export const useCompanyStore = defineStore('companie', ()=>{
     try {
       const data = await getCompany();
       company.value = data.company; 
+      return data.company; 
 
     } catch (error) {
       console.log(error);
       company.value = {}; 
+      return null; 
     }finally {
       loading.value = false; 
     }
