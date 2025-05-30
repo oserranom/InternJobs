@@ -1,6 +1,7 @@
 
 const baseURL = import.meta.env.VITE_API_URL;
 
+
 export async function registerCandidate({ name, email, phone_number, cv, password }){
     const url = `${baseURL}/candidates`; 
 
@@ -87,7 +88,6 @@ export async function loginCandidate({ email, password }){
         });
 
         const data = await response.json();
-        console.log(data); 
 
         if(!response.ok){
             throw new Error(data.message || 'No pudo realizarse el Login');
@@ -118,7 +118,6 @@ export async function loginCompany({ email, password }){
         });
 
         const data = await response.json();
-        console.log(data); 
 
         if(!response.ok){
             throw new Error(data.message || 'No pudo realizarse el Login');
