@@ -83,7 +83,7 @@ const router = createRouter({
         {
           path: '',
           name: 'CompanyProfile',
-          redirect: { name: 'CompanyConfig'}
+          redirect: { name: 'Applications'}
         },
         {
           path: 'config',

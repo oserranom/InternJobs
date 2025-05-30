@@ -6,10 +6,10 @@
     const router = useRouter();
 
     const menuItems = [
-        { name: 'Configuración de la cuenta', routeName: 'CompanyConfig'},
-        { name: 'Crear oferta', routeName: 'CreateOffer' },
         { name: 'Aplicaciones recibidas', routeName: 'Applications' },
-        { name: 'Ofertas publicadas', routeName: 'PublishedOffers'}
+        { name: 'Crear oferta', routeName: 'CreateOffer' },
+        { name: 'Ofertas publicadas', routeName: 'PublishedOffers'},
+        { name: 'Configuración de la cuenta', routeName: 'CompanyConfig'}
     ]
 
     const goTo = (routeName)=>{

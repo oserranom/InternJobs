@@ -1,5 +1,5 @@
 <script setup>
-    import { onMounted, reactive } from 'vue';
+    import { onMounted, reactive, computed } from 'vue';
     import { useRouter } from 'vue-router'; 
     import { useCompanyStore } from '@/stores/companies';
     import Alert from '../Alert.vue';
@@ -64,7 +64,7 @@
 
             showAlert('success', 'Datos guardados');
             setTimeout(() => {
-                //router.push();
+                router.push({ name: 'CompanyProfile'});
             }, 3500);
 
             
@@ -74,11 +74,16 @@
         }
     }
 
+    const maxLength = 2000;
+
+    const restCaracts = computed(()=>{
+        return maxLength - company.description.length;
+    });
     
 </script>
 
 <template>
-    <h1 class="text-center text-2xl font-semibold">Datos de mi <span class="text-emerald-500">Empresa</span></h1>
+    <h1 class="text-center text-2xl font-semibold">Modifica los datos de tu <span class="text-emerald-500">Empresa</span></h1>
     <div class="flex justify-center text-gray-100 p-6 mt-5">
         <form
             class="md:w-3/5 rounded-lg bg-gray-900 p-5"
@@ -129,8 +134,14 @@
                     name="description"
                     id="description"
                     v-model="company.description"
+                    :maxlength="maxLength"
                 >
                 </textarea>
+                <p 
+                    class="text-right text-sm"
+                    :class="[restCaracts < 100 ? 'text-red-500' : 'text-gray-100']"
+                >{{ restCaracts }}
+                </p>
             </div>
 
             <div class="p-3 -mb-2">
