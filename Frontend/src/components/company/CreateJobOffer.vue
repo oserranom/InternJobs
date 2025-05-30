@@ -1,11 +1,9 @@
 <script setup>
     import { computed, reactive } from 'vue';
     import { useRouter } from 'vue-router'; 
-    import { useCompanyStore } from '@/stores/companies';
     import Alert from '../Alert.vue';
-    import { updateCompany } from '@/services/companyService'
+    import { createJobOffer } from '@/services/companyService'
 
-    const companyStore = useCompanyStore(); 
     const router = useRouter(); 
 
     const jobOffer = reactive({
@@ -37,7 +35,12 @@
 
 
     const formValidation = async ()=>{
-        if(Object.values(jobOffer).includes('')){
+        
+        const isEmpty = Object.values(jobOffer).some(val => {
+            return String(val).trim() === '' || val === null || val === undefined;
+        });
+
+        if(isEmpty){
             showAlert('error', 'Todos los campos son requeridos'); 
             return;
         }
@@ -47,12 +50,12 @@
 
     const handleSubmit = async ()=>{
         try {
-            const response = 1; 
+            const response = await createJobOffer(jobOffer); 
             console.log(response); 
 
-            showAlert('success', 'Datos guardados');
+            showAlert('success', 'La oferta ha sido publicada');
             setTimeout(() => {
-                router.push({ name: 'CompanyProfile'});
+                router.push({ name: 'PublishedOffers' });
             }, 3500);
 
             
@@ -86,6 +89,7 @@
                     id="title" 
                     name="title" 
                     placeholder="Título para la oferta"
+                    v-model="jobOffer.title"
                 >
             </div>
 
