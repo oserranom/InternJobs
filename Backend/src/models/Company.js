@@ -110,7 +110,8 @@ export const findApplicationsByCompany = async (id) =>{
             candidates.name, 
             candidates.email, 
             applications.applied_at,
-            applications.status
+            applications.status,
+            applications.id
             FROM applications
             JOIN job_offers ON applications.job_offer_id = job_offers.id
             JOIN candidates ON applications.candidate_id = candidates.id
@@ -140,7 +141,7 @@ export const findApplicationById = async (id)=>{
     const { rows } = await pool.query(
         `SELECT 
         candidates.name, candidates.cv, candidates.email, candidates.phone_number,
-        applications.cover_letter, applications.status,
+        applications.cover_letter, applications.status, applications.id,
         job_offers.title
         FROM applications
         JOIN candidates ON applications.candidate_id = candidates.id

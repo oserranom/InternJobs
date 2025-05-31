@@ -102,7 +102,7 @@ const router = createRouter({
           component: CreateJobOffer
         },
         {
-          path: 'applications',
+          path: 'applications/:id?',
           name: 'Applications',
           component: RecivedApplications
         },

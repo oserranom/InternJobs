@@ -105,3 +105,57 @@ export async function getJobOffersByCompany(){
     }
 
 }
+
+export async function getApplicationsByCompany(){
+    const url = `${baseURL}/companies/applications`;
+    const token = localStorage.getItem('AUTH_TOKEN');
+
+    try {
+        const response = await fetch(url, {
+            headers:{
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+
+        if(!response.ok){
+            throw new Error(data.message || 'No se pudo obtener aplicaciones');
+        }
+
+        return data;
+
+    } catch (error) {
+        console.error(error);
+        throw error; 
+    }
+
+}
+
+
+export async function getApplicationById(id){
+    const url = `${baseURL}/companies/applications/${id}`;
+    const token = localStorage.getItem('AUTH_TOKEN');
+
+    try {
+        const response = await fetch(url, {
+            headers:{
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+
+        if(!response.ok){
+            throw new Error(data.message || 'No se ha podido obtener la aplicación');
+        }
+
+        return data;
+
+    } catch (error) {
+        console.error(error);
+        throw error; 
+    }
+}
