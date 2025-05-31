@@ -1,12 +1,21 @@
 <script setup>
-    import { onMounted, ref, computed } from 'vue';
-    import { useRoute } from 'vue-router';
-    import { getApplicationById } from '@/services/companyService';
-    import { formatDate } from '@/helpers';
+    import { onMounted, ref, computed, reactive } from 'vue';
+    import { useRoute, useRouter } from 'vue-router';
+    import { getApplicationById, updateStatus } from '@/services/companyService';
+    import Alert from '../Alert.vue';
+
 
     const route = useRoute();
+    const router = useRouter(); 
     const application = ref(null);
     const errorMessage = ref('');
+
+    const alert = reactive({
+        type: '',
+        message: ''
+    });
+
+    const status = ref('applied');
 
     onMounted(async ()=>{
         try {
@@ -32,8 +41,28 @@
         }
     }); 
 
-    const handleSubmit = async (id) => {
-        console.log(id); 
+
+    const deleteAlert = ()=>{
+        setTimeout(()=>{
+            alert.message = ''
+        }, 3000);
+    }
+
+    const showAlert = (type, message) =>{
+        alert.type = type;
+        alert.message = message;
+
+        deleteAlert(); 
+    }
+
+    const handleSubmit = async (id, newStatus) => {
+        await updateStatus(id, newStatus); 
+        application.value.status = newStatus; 
+        showAlert('success', 'Estado actualizado');
+
+        setTimeout(() => {
+            router.push({ name: 'CompanyProfile' }); 
+        }, 3000);
     }
 
 </script>
@@ -43,7 +72,7 @@
     <div class="flex justify-center">
         
         <div v-if="application" class="w-full bg-gray-900 rounded p-2">
-            <h2 class="text-xl text-center mt-2 font-semibold">{{ application.title }}</h2>
+            <h2 class="text-xl text-center mt-2 font-semibold text-emerald-500">{{ application.title }}</h2>
 
             <div class="md:flex justify-around p-3 mt-3 font-semibold">
                 <p>{{ application.name }}</p>
@@ -66,22 +95,40 @@
             </div>
 
             <form 
-                @submit="handleSubmit(application.id)"
+                @submit.prevent="handleSubmit(application.id, status)"
+                class="border-t border-white/20 my-5 pt-5"
             >
-                <label for="status">Actualiza el estado de la aplicación</label>
-                <select name="status" id="status" class="text-gray-900 bg-gray-100 rounded">
-                    <option default value="applied">Applied</option>
-                    <option value="interview">Interview</option>
-                    <option value="rejected">Rejected</option>
-                    <option value="hired">Hired</option>
-                </select>
+                <div class="flex flex-col items-center justify-center gap-4">
+                    
+                    <label for="status" class="font-medium text-lg">Actualiza el estado de la aplicación</label>
+                
 
-                <input 
-                    type="submit" 
-                    value="Actualizar"
-                    class="bg-emerald-500 rounded px-3 py-1"
-                >
+                    <div>
+                        <select name="status" id="status" 
+                            class="text-gray-900 bg-gray-100 rounded px-3 py-1 mx-2"
+                            v-model="status"
+                        >
+                            <option value="applied">Applied</option>
+                            <option value="interview">Interview</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="hired">Hired</option>
+                        </select>
+
+                        <input 
+                            type="submit" 
+                            value="Actualizar"
+                            class="bg-emerald-500 rounded px-3 py-1 font-semibold mx-2 cursor-pointer hover:bg-emerald-600 transition"
+                        >
+                    </div>
+
+                </div>
+
             </form>
+
+            <Alert 
+                v-if="alert.message"
+                :alert="alert"
+            />
 
         </div>
 

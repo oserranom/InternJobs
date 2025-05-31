@@ -1,14 +1,14 @@
 <script setup>
     import { useRoute, useRouter } from 'vue-router';
-    import { computed, onMounted } from 'vue';
+    import { computed } from 'vue';
 
     const route = useRoute();
     const router = useRouter();
 
     const menuItems = [
-        { name: 'Aplicaciones recibidas', routeName: 'Applications' },
-        { name: 'Crear oferta', routeName: 'CreateOffer' },
         { name: 'Ofertas publicadas', routeName: 'PublishedOffers'},
+        { name: 'Crear oferta', routeName: 'CreateOffer' },
+        { name: 'Aplicaciones recibidas', routeName: 'Applications' },
         { name: 'Configuración de la cuenta', routeName: 'CompanyConfig'}
     ]
 

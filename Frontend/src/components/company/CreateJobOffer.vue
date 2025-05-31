@@ -76,7 +76,7 @@
 
 <template>
     <h1 class="text-center text-2xl font-semibold">Crea una nueva <span class="text-emerald-500">Oferta</span></h1>
-    <div class="flex justify-center text-gray-100 p-6 mt-5">
+    <div class="flex justify-center text-gray-100 p-6 mt-5 mb-10">
         <form
             class="md:w-3/5 rounded-lg bg-gray-900 p-5"
             @submit.prevent="formValidation"

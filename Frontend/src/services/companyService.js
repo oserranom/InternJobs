@@ -159,3 +159,33 @@ export async function getApplicationById(id){
         throw error; 
     }
 }
+
+export async function updateStatus(id, status){
+    const url = `${baseURL}/companies/applications/${id}`;
+    const token = localStorage.getItem('AUTH_TOKEN');
+
+    try {
+        const response = await fetch(url, {
+            method: 'PATCH',
+            headers:{
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                status
+            })
+        });
+
+        const data = await response.json();
+
+        if(!response.ok){
+            throw new Error(data.message || 'No se ha podido actualizar el estado'); 
+        }
+
+        return data; 
+        
+    } catch (error) {
+        console.log(error);
+        throw error; 
+    }
+}
