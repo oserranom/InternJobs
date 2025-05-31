@@ -36,8 +36,8 @@
 </script>
 
 <template>
-    <nav class="bg-gray-800 sticky top-0 z-10 shadow-[0_4px_6px_-2px_rgba(16,185,129,0.5)]">
-        <div class="text-center md:flex justify-between px-15 py-2 items-center">
+    <nav class="bg-gray-800 sticky top-0 z-10 shadow-[0_2px_4px_-1px_rgba(16,185,129,0.5)]">
+        <div class="text-center md:flex justify-between px-15 items-center">
 
             <RouterLink
                 class="text-3xl font-serif font-bold text-gray-50 hover:text-emerald-400 text-shadow-emerald"

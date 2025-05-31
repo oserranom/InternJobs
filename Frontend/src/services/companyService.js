@@ -77,3 +77,31 @@ export async function createJobOffer({ title, location, study_field, education_l
         throw error; 
     }
 }
+
+
+export async function getJobOffersByCompany(){
+    const url = `${baseURL}/companies/jobs`;
+    const token = localStorage.getItem('AUTH_TOKEN');
+
+    try {
+        const response = await fetch(url, {
+            headers:{
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        }); 
+
+        const data = await response.json();
+
+        if(!response.ok){
+            throw new Error(data.message || 'No se han podido obtener las ofertas publicadas'); 
+        }
+
+        return data; 
+
+    } catch (error) {
+        console.error(error);
+        throw error; 
+    }
+
+}

@@ -16,9 +16,13 @@ export const useCandidateStore = defineStore('candidate', ()=>{
     try {
       const data = await getCandidate();
       candidate.value = data.candidate; 
+      return data.candidate;
+
     } catch (error) {
       console.log(error);
       candidate.value = null; 
+      return null; 
+      
     }finally {
       loading.value = false; 
     }

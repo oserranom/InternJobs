@@ -22,6 +22,7 @@ export const useCompanyStore = defineStore('companie', ()=>{
       console.log(error);
       company.value = {}; 
       return null; 
+      
     }finally {
       loading.value = false; 
     }

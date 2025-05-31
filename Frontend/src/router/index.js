@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { getCandidate, getCompany } from '@/services/authService';
 
 //Home
 import HomeView from '@/views/HomeView.vue'
@@ -20,6 +21,7 @@ import PublishedJobOffers from '@/components/company/PublishedJobOffers.vue';
 import RecivedApplications from '@/components/company/RecivedApplications.vue';
 //ApplyForm
 import ApplyFormView from '@/views/ApplyFormView.vue';
+
 
 
 const router = createRouter({
@@ -71,14 +73,18 @@ const router = createRouter({
       name: 'LoginCompany',
       component: LoginCompanyView
     },
+    //Perfil candidate
     {
       path: '/candidate/profile',
       name: 'CandidateProfile',
-      component: CandidateProfileView
+      component: CandidateProfileView,
+      meta: { requiresAuth: true },
     },
+    //Perfil company
     {
       path: '/company/profile',
       component: CompanyProfileView,
+      meta: { requiresAuth: true },
       children: [
         {
           path: '',
@@ -109,5 +115,40 @@ const router = createRouter({
     }
   ],
 }); 
+
+//Protección de rutas privadas con:
+
+router.beforeEach(async (to, from, next)=>{
+
+  const requiresAuth = to.matched.some(url => url.meta?.requiresAuth);
+
+  if(!requiresAuth){
+    return next(); //He requerido añadir esto para no caer en bucle de redirección infinito 
+  }
+
+  const role = localStorage.getItem('USER_ROLE');
+
+  if(role === 'company'){
+    try {
+      await getCompany();
+      return next();
+    } catch (error) {
+      return next({ name: 'LoginCompany' }); 
+    }
+  }
+
+  if(role === 'candidate'){
+    try {
+      await getCandidate();
+      return next(); 
+    } catch (error) {
+      return next({ name: 'LoginCandidate' }); 
+    }
+  }
+
+  //Sin rol válido
+  return next({ name: 'LoginCandidate' }); 
+
+});
 
 export default router
