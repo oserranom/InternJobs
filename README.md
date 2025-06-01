@@ -37,7 +37,7 @@
 - Visualización de candidatos postulados a sus ofertas
 - Panel privado con administración completa
 
-### Estado del proyecto:
+### 🚧 Estado del proyecto:
 
 Producto funcional en su v1 lista para la entrega como proyecto académico.
 
@@ -66,14 +66,14 @@ git clone https://github.com/oserranom/InternJobs.git
 cd internjobs
 
 ## Backend:
-Sustituye el documento ".env.template" por ".env" y configura tus credenciales de conexión local.
+#Sustituye el documento ".env.template" por ".env" y configura tus credenciales de conexión local.
 
 cd frontend
 npm i
 npm run dev
 
 ## Frontend
-Sustituye el documento ".env.template" por ".env.local" y configura tus credenciales de conexión local.
+#Sustituye el documento ".env.template" por ".env.local" y configura tus credenciales de conexión local.
 
 cd backend
 npm i
