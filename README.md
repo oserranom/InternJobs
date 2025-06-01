@@ -50,9 +50,10 @@
 ### 🖥️ Clonar el repositorio
 
 ```bash
-git clone https://github.com/tuusuario/internjobs.git
+git clone https://github.com/oserranom/InternJobs.git
 cd internjobs
 
+```markdown
 ## Backend:
 Sustituye el documento ".env.template" por ".env" y configura tus credenciales de conexión local.
 
@@ -61,6 +62,7 @@ cd frontend
 npm i
 npm run dev
 
+```markdown
 ## Frontend
 Sustituye el documento ".env.template" por ".env.local" y configura tus credenciales de conexión local.
 
@@ -69,7 +71,7 @@ cd backend
 npm i
 npm run dev
 
-
+```markdown
 ###Estado del proyecto:
 
 Producto funcional en su v1 lista para la entrega como proyecto académico.
