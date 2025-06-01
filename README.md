@@ -52,7 +52,7 @@
 ```bash
 git clone https://github.com/oserranom/InternJobs.git
 cd internjobs
-
+```
 ```markdown
 ## Backend:
 Sustituye el documento ".env.template" por ".env" y configura tus credenciales de conexión local.
