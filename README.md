@@ -78,6 +78,7 @@ npm run dev
 Producto funcional en su v1 lista para la entrega como proyecto académico.
 
 Mejoras pendientes:
+
 - Validaciones adicionales en forms de update.
 - Seguridad: Pedir password en las funciones de update.
 - Estilos: Responsive en los perfiles de Candidate/Company
