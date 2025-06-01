@@ -37,6 +37,18 @@
 - Visualización de candidatos postulados a sus ofertas
 - Panel privado con administración completa
 
+### Estado del proyecto:
+
+Producto funcional en su v1 lista para la entrega como proyecto académico.
+
+Mejoras pendientes:
+
+- Validaciones adicionales en forms de update.
+- Seguridad: Pedir password en las funciones de update.
+- Estilos: Responsive en los perfiles de Candidate/Company
+- Funciones delete a job_offers, candidates y companies.
+- Funcion update a job_offers. 
+
 ---
 
 ## ⚙️ Instalación local
@@ -72,18 +84,8 @@ cd backend
 npm i
 npm run dev
 ```
-```markdown
-###Estado del proyecto:
 
-Producto funcional en su v1 lista para la entrega como proyecto académico.
 
-Mejoras pendientes:
-
-- Validaciones adicionales en forms de update.
-- Seguridad: Pedir password en las funciones de update.
-- Estilos: Responsive en los perfiles de Candidate/Company
-- Funciones delete a job_offers, candidates y companies.
-- Funcion update a job_offers. 
 
 
 
