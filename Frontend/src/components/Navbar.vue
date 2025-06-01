@@ -64,7 +64,7 @@
                >
                     <RouterLink 
                         :to="{name: 'CandidateProfile' }"
-                        class="text-gray-100 text-lg font-semibold mx-4 bg-emerald-500 px-2 py-1 rounded 
+                        class="text-gray-100 text-lg font-semibold mx-4 bg-emerald-500 px-3 py-1 rounded 
                                 hover:bg-emerald-600 flex justify-between gap-2 items-center max-w-75"
                     >
                         <svg 
@@ -112,7 +112,7 @@
 
                 <div class="my-5">
                     <button
-                        class="rounded font-semibold ml-2 bg-red-500 px-2 py-1.5 cursor-pointer hover:bg-red-600"
+                        class="rounded font-semibold ml-2 bg-red-500 px-3 py-1.5 cursor-pointer hover:bg-red-600"
                         @click="handleLogout"
                     >
                         Logout

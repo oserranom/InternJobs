@@ -14,13 +14,17 @@ import LoginCompanyView from '@/views/auth/LoginCompanyView.vue';
 //Profiles
 import CandidateProfileView from '@/views/profile/CandidateProfileView.vue';
 import CompanyProfileView from '@/views/profile/CompanyProfileView.vue';
-//Profile Components
+//Profile company Components
 import CompanyAccountSettings from '@/components/company/CompanyAccountSettings.vue';
 import CreateJobOffer from '@/components/company/CreateJobOffer.vue';
 import PublishedJobOffers from '@/components/company/PublishedJobOffers.vue';
 import RecivedApplications from '@/components/company/RecivedApplications.vue';
+//Profile candidate components
+import ApplicationsStatus from '@/components/candidate/ApplicationsStatus.vue';
+import CandidateAccountSettings from '@/components/candidate/CandidateAccountSettings.vue';
 //ApplyForm
 import ApplyFormView from '@/views/ApplyFormView.vue';
+
 
 
 
@@ -76,9 +80,25 @@ const router = createRouter({
     //Perfil candidate
     {
       path: '/candidate/profile',
-      name: 'CandidateProfile',
       component: CandidateProfileView,
       meta: { requiresAuth: true },
+      children: [
+        {
+          path: '',
+          name: 'CandidateProfile',
+          redirect: { name: 'ApplicationsStatus' }
+        },
+        {
+          path: 'applications',
+          name: 'ApplicationsStatus',
+          component: ApplicationsStatus
+        },
+        {
+          path: 'config',
+          name: 'CandidateAccountSettings',
+          component: CandidateAccountSettings
+        }
+      ]
     },
     //Perfil company
     {

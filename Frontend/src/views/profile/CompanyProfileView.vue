@@ -8,7 +8,7 @@
     const menuItems = [
         { name: 'Ofertas publicadas', routeName: 'PublishedOffers'},
         { name: 'Crear oferta', routeName: 'CreateOffer' },
-        { name: 'Aplicaciones recibidas', routeName: 'Applications' },
+        { name: 'Candidaturas recibidas', routeName: 'Applications' },
         { name: 'Configuración de la cuenta', routeName: 'CompanyConfig'}
     ]
 

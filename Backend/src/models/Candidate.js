@@ -55,5 +55,5 @@ export const findApplicationsByCandidate = async (id) =>{
         [id]
     ); 
 
-    return rows[0];
+    return rows;
 }

@@ -5,7 +5,7 @@ const baseURL = import.meta.env.VITE_API_URL;
 export async function applyToJobOffer(offerId, cover_letter){
 
     const token = localStorage.getItem('AUTH_TOKEN');
-    if(!token) throw new Error('El candidat no está logeado');
+    if(!token) throw new Error('El candidato no está logeado');
 
     const url = `${baseURL}/jobs/${offerId}/apply`;
 

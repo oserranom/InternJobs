@@ -51,7 +51,7 @@
 
 <template>
 
-    <h1 class="text-center text-2xl font-semibold mb-10">Gestiona las <span class="text-emerald-500">aplicaciones</span> recibidas</h1>
+    <h1 class="text-center text-2xl font-semibold mb-10">Gestiona las <span class="text-emerald-500">Candidaturas</span> recibidas</h1>
 
 
     <div v-if="applicationDetail" class="flex justify-center">
@@ -67,7 +67,7 @@
 
         <h2 v-if="errorMessage" class="text-2xl text-center">{{ errorMessage }}</h2>
 
-        <div v-else class="md:w-3/5">
+        <div v-else class="lg:w-3/5">
             <Application 
                 v-for="application in applications"
                 :key="application.id"

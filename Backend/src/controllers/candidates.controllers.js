@@ -181,7 +181,7 @@ export const getApplicationsByCandidate = async (req, res) =>{
         const applications = await findApplicationsByCandidate(req.id);
         if(!applications) return res.status(404).json({ message: "No se encuentran aplicaciones a ofertas" });
         
-        return res.status(200).json(rows); 
+        return res.status(200).json(applications); 
 
     } catch (error) {
         console.log(error);
