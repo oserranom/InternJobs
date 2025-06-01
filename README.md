@@ -64,26 +64,21 @@ Mejoras pendientes:
 ```bash
 git clone https://github.com/oserranom/InternJobs.git
 cd internjobs
-```
-```markdown
+
 ## Backend:
 Sustituye el documento ".env.template" por ".env" y configura tus credenciales de conexión local.
-```
-```bash
+
 cd frontend
 npm i
 npm run dev
-```
 
-```markdown
 ## Frontend
 Sustituye el documento ".env.template" por ".env.local" y configura tus credenciales de conexión local.
-```
-```bash
+
 cd backend
 npm i
 npm run dev
-```
+
 
 
 
