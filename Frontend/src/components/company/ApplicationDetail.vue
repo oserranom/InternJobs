@@ -74,12 +74,12 @@
         <div v-if="application" class="w-full bg-gray-900 rounded p-2">
             <h2 class="text-xl text-center mt-2 font-semibold text-emerald-500">{{ application.title }}</h2>
 
-            <div class="md:flex justify-around p-3 mt-3 font-semibold">
+            <div class="lg:flex justify-between py-3 px-25 mt-3 font-semibold">
                 <p>{{ application.name }}</p>
                 <p>{{ application.phone_number }}</p>
             </div>
 
-            <div class="md:flex justify-around p-3 font-semibold items-center">
+            <div class="lg:flex justify-between py-3 px-25 font-semibold items-center">
                 <p>{{ application.email }}</p>
                 <p :class="`${statusClass} rounded px-3 py-1`">{{ application.status }}</p>
             </div>
