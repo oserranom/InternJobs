@@ -48,6 +48,8 @@ Mejoras pendientes:
 - Estilos: Responsive en los perfiles de Candidate/Company
 - Funciones delete a job_offers, candidates y companies.
 - Funcion update a job_offers. 
+- Paginación en resultados de búsqueda
+- Paginación en candidaturas en perfil de candidate y company.
 
 ---
 
