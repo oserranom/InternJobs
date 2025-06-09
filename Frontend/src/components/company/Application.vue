@@ -12,7 +12,7 @@
     });
 
     const goToDetail = () =>{
-        router.push({ name: 'Applications', params: { id: props.application.id }}); 
+        router.push({ name: 'ApplicationDetail', params: { id: props.application.id }}); 
     }
 
     //Clases de estilo dinámicas para multiples opciones 

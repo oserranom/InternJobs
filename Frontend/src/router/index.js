@@ -20,6 +20,7 @@ import CreateJobOffer from '@/components/company/CreateJobOffer.vue';
 import PublishedJobOffers from '@/components/company/PublishedJobOffers.vue';
 import RecivedApplications from '@/components/company/RecivedApplications.vue';
 import UpdateJobOffer from '@/components/company/UpdateJobOffer.vue';
+import ApplicationDetail from '@/components/company/ApplicationDetail.vue';
 //Profile candidate components
 import ApplicationsStatus from '@/components/candidate/ApplicationsStatus.vue';
 import CandidateAccountSettings from '@/components/candidate/CandidateAccountSettings.vue';
@@ -123,9 +124,14 @@ const router = createRouter({
           component: CreateJobOffer
         },
         {
-          path: 'applications/:id?',
+          path: 'applications',
           name: 'Applications',
           component: RecivedApplications
+        },
+        {
+          path: 'application/:id',
+          name: 'ApplicationDetail',
+          component: ApplicationDetail
         },
         {
           path: 'published_offers',
@@ -133,7 +139,7 @@ const router = createRouter({
           component: PublishedJobOffers
         },
         {
-          path: 'update_joboffer/:id?',
+          path: 'update_joboffer/:id',
           name: 'UpdateJobOffer',
           component: UpdateJobOffer
         }

@@ -189,3 +189,50 @@ export async function updateStatus(id, status){
         throw error; 
     }
 }
+
+export async function updateJobOffer(id, { title, location, study_field, education_level, salary, description }){
+    const url = `${baseURL}/companies/jobs/${id}`;
+    const token = localStorage.getItem('AUTH_TOKEN');
+
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers:{
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title,
+                location,
+                study_field,
+                education_level,
+                salary,
+                description
+            })
+        });
+
+    } catch (error) {
+        console.log(error);
+        throw error; 
+    }
+}
+
+export async function deleteJobOffer(id){
+
+    const url = `${baseURL}/companies/jobs/${id}`;
+    const token = localStorage.getItem('AUTH_TOKEN');
+
+    try {
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers:{
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+    } catch (error) {
+        console.log(error);
+        throw error; 
+    }
+}

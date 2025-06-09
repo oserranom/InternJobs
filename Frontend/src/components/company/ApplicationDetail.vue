@@ -61,8 +61,8 @@
         showAlert('success', 'Estado actualizado');
 
         setTimeout(() => {
-            router.push({ name: 'CompanyProfile' }); 
-        }, 3000);
+            router.push({ name: 'Applications' }); 
+        }, 2500);
     }
 
 </script>
@@ -71,7 +71,7 @@
 
     <div class="flex justify-center">
         
-        <div v-if="application" class="w-full bg-gray-900 rounded p-2">
+        <div v-if="application" class="md:w-2/3 bg-gray-900 rounded p-2">
             <h2 class="text-xl text-center mt-2 font-semibold text-emerald-500">{{ application.title }}</h2>
 
             <div class="lg:flex justify-between py-3 px-25 mt-3 font-semibold">

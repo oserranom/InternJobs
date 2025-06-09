@@ -3,6 +3,8 @@
     import { useRouter, useRoute } from 'vue-router'; 
     import Alert from '../Alert.vue';
     import { getJobOffer } from '@/services/seacrhService';
+    import { updateJobOffer, deleteJobOffer } from '@/services/companyService';
+
 
     const router = useRouter(); 
     const route = useRoute();
@@ -61,7 +63,7 @@
 
     const formValidation = async ()=>{
         
-        const isEmpty = Object.values(JobOfferUpdated).some(val => {
+        const isEmpty = Object.values(jobOfferUpdated).some(val => {
             return String(val).trim() === '' || val === null || val === undefined;
         });
 
@@ -75,18 +77,17 @@
 
     const handleSubmit = async ()=>{
         try {
-            //const response = await createJobOffer(jobOffer); 
-            console.log(response); 
+            const response = await updateJobOffer(id, jobOfferUpdated); 
 
-            showAlert('success', 'La oferta ha sido publicada');
+            showAlert('success', 'La oferta ha sido actualizada');
             setTimeout(() => {
                 router.push({ name: 'PublishedOffers' });
-            }, 3500);
+            }, 2500);
 
             
         } catch (error) {
             console.log(error);
-            showAlert('error', error); 
+            showAlert('error', 'La oferta no ha podido actualizarse'); 
         }
     }
 
@@ -95,6 +96,22 @@
     const restCaracts = computed(()=>{
         return maxLength - jobOfferUpdated.description.length;
     });
+
+    const deleteOffer = async () =>{
+        try {
+            const response = await deleteJobOffer(id);
+            console.log(response);
+
+            showAlert('success', 'La oferta ha sido eliminada');
+            setTimeout(() => {
+                router.push({ name: 'PublishedOffers' });
+            }, 2500);
+
+        } catch (error) {
+            console.log(error);
+            showAlert('error', 'La oferta no ha podido ser eliminada'); 
+        }
+    }
 
     
 </script>
@@ -198,7 +215,7 @@
                     >{{ restCaracts }}</p>
             </div>
 
-            <div class="flex justify-between">
+            <div class="md:flex justify-between">
                 <div class="p-3 -mb-2 w-1/3">
                     <input 
                         type="submit" 
@@ -209,7 +226,8 @@
 
                 <div class="p-3 -mb-2 w-1/3">
                     <button
-                        @click=""
+                        type="button"
+                        @click.prevent="deleteOffer"
                         class="bg-red-500 p-2 rounded font-semibold cursor-pointer w-full hover:bg-red-600 transition"
                     >
                         Eliminar Oferta
