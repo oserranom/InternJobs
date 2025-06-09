@@ -56,7 +56,7 @@ Mejoras pendientes:
 ## ⚙️ Instalación local
 
 ### 🔧 Requisitos previos
-- Node.js v18+
+- Node.js v22+
 - PostgreSQL
 
 ---
