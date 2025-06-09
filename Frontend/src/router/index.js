@@ -19,6 +19,7 @@ import CompanyAccountSettings from '@/components/company/CompanyAccountSettings.
 import CreateJobOffer from '@/components/company/CreateJobOffer.vue';
 import PublishedJobOffers from '@/components/company/PublishedJobOffers.vue';
 import RecivedApplications from '@/components/company/RecivedApplications.vue';
+import UpdateJobOffer from '@/components/company/UpdateJobOffer.vue';
 //Profile candidate components
 import ApplicationsStatus from '@/components/candidate/ApplicationsStatus.vue';
 import CandidateAccountSettings from '@/components/candidate/CandidateAccountSettings.vue';
@@ -130,6 +131,11 @@ const router = createRouter({
           path: 'published_offers',
           name: 'PublishedOffers',
           component: PublishedJobOffers
+        },
+        {
+          path: 'update_joboffer/:id?',
+          name: 'UpdateJobOffer',
+          component: UpdateJobOffer
         }
       ]
     }

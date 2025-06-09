@@ -1,6 +1,6 @@
 <script setup>
     import { onMounted, ref } from 'vue';
-    import JobOffer from '../JobOffer.vue';
+    import JobOfferComProfile from './JobOfferComProfile.vue';
     import { getJobOffersByCompany } from '@/services/companyService';
 
     const jobOffers = ref([]);
@@ -29,7 +29,7 @@
             v-else  
             class="md:w-3/5"
         >
-            <JobOffer 
+            <JobOfferComProfile 
                 v-for="jobOffer in jobOffers"
                 :key="jobOffer.id"
                 :jobOffer="jobOffer"
