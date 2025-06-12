@@ -4,12 +4,14 @@
 
   const router = useRouter(); 
 
+  //Objeto guarda datos de form de búsqueda
   const searchForm = reactive({
     location: '',
     study_field: '',
     education_level: '',
   });
 
+  //Enviamos query a la vista de resultados
   function handleSubmit() {
     router.push({ 
       name: 'search',

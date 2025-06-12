@@ -11,13 +11,15 @@
     const candidateStore = useCandidateStore();
     const companyStore = useCompanyStore(); 
 
+    //Control sobre la carga de datos del store
     const loading = computed(() => candidateStore.loading || companyStore.loading ); 
 
+    //Verifica si hay hay un usuario logeado
     const isCandidateLoggedIn = computed(() => !!candidateStore.candidate?.id);
     const isCompanyLoggedIn = computed(() => !!companyStore.company?.id);
-    //const user = computed(() => isCandidateLoggedIn.value || isCompanyLoggedIn.value);
+    
 
-
+    //Sincronizar store en función del rol
     onMounted(async ()=>{
         if(role.value === 'company'){
            await companyStore.fetchCompany();
@@ -28,6 +30,7 @@
     });
 
 
+    //Llama a la function logout que destruye el token 
     const handleLogout = ()=>{
         candidateStore.logout();
         companyStore.logout(); 
@@ -161,6 +164,7 @@
 
 </template>
 
+<!--Me ha sido imposible conseguir este efecto con Tailwind-->
 <style>
     .text-shadow-emerald:hover {
         text-shadow:  0 0 6px #6ee7b7; /* emerald-400 */

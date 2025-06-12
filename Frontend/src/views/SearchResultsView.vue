@@ -14,6 +14,7 @@
     const loading = ref(true);
     const errorMessage = ref('');
 
+    //Llamada a la API con parámetros 
     function updateSearchParams(){
 
         location.value = route.query.location || '';
