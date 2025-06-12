@@ -63,7 +63,7 @@
     </div>
 
     <main class="flex justify-center">
-        <div class="w-full md:w-1/2 mb-10">
+        <div class="w-full md:w-1/2 mb-10 min-h-[50vh]">
             <h2 
                 v-if="errorMessage"
                 class="text-2xl font-semibold text-center mt-10 mb-100"

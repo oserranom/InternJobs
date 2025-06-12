@@ -188,7 +188,7 @@ export const createJobOffer = async (req, res) =>{
     try {
         //Validación
         if(!title?.trim() || !description?.trim()) return res.status(400).json({ message: "Los campos title y description son requeridos" });
-        if(!salary || isNaN(salary)) return res.status(400).json({ message: "Introduce un sueldo númerico" }); 
+        if(salary === null || isNaN(salary)) return res.status(400).json({ message: "Introduce un sueldo númerico" }); 
         
         //Validación OK e ID válido, llamada a model:
         const jobOffer = await insertNewJobOffer(req.id, title, description, location, salary, education_level, study_field);

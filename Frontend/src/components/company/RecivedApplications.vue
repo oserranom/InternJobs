@@ -14,7 +14,7 @@
     const fetchApplications = async ()=>{
         try {
             applications.value = await getApplicationsByCompany();
-            if(applications.value.length === 0) errorMessage.value('No se han recibido aplicaciones todavía'); 
+            if(applications.value.length === 0) errorMessage.value = 'No se han recibido aplicaciones todavía'; 
             console.log(applications)
         } catch (error) {
             console.log(error);
