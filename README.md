@@ -67,6 +67,10 @@ Mejoras pendientes:
 git clone https://github.com/oserranom/InternJobs.git
 cd internjobs
 
+##Crea una base de datos postgreSQL con tus credenciales (Puedes llamarla intern_jobs o el nombre definido en el archivo .env)
+##Ejecuta el archivo database.sql en backend/src/database para crear la estrucura y relaciones de la base de datos
+psql -U usuario -d intern_jobs -f backend/src/database/database.sql
+
 ## Backend:
 #Sustituye el documento ".env.template" por ".env" y configura tus credenciales de conexión local.
 
